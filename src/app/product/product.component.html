@@ -1,1 +1,30 @@
-<p>product works!</p>
+<div class="ui fluid card" *ngIf="product" >
+    <div class="image">
+      <img class="card-image" src="../../assets/images/{{product.name}}.jpg">
+    </div>
+    <div class="content">
+      <div class="header header-link">{{product.name}}</div>
+      <div class="description">
+          {{product.description}}
+      </div>
+    </div>
+    <div class="extra content">
+      <div class="ui list">
+        <div class="item">
+          <span class="left floated">
+          <i class="shekel sign icon"></i>{{product.price}}
+          </span>
+        </div>
+        <div class="item">
+          <span class="left floated">
+            <p>3/5</p>
+          </span>
+          <span class="right floated">
+            <button [disabled]='isOutOfStock' class="ui primary button">
+            Add to cart
+          </button>
+        </span>
+        </div>
+      </div>
+    </div>
+  </div>

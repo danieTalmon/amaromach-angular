@@ -1,15 +1,34 @@
+import { ProductService } from 'src/app/services/product/product.service';
 import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+export interface Product {
+  name: string;
+  description: string;
+  price: number;
+  amount: number;
+  limit?: number;
+}
 
 @Component({
-  selector: 'app-product-list',
+  selector: 'ar-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.less']
 })
 export class ProductListComponent implements OnInit {
 
-  constructor() { }
+  products: Product[];
+  productsStremar: BehaviorSubject<Product[]>;
 
-  ngOnInit(): void {
+
+  constructor(private productService: ProductService ) { }
+
+  ngOnInit() {
+    this.productService.getProducts().subscribe((products: Product[]) => {
+      this.products = products;
+      console.log(typeof products);
+      this.productsStremar = new BehaviorSubject<Product[]>(this.products);
+    });
   }
 
 }

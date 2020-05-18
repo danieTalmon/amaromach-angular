@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-product-info',
+  selector: 'ar-product-info',
   templateUrl: './product-info.component.html',
   styleUrls: ['./product-info.component.less']
 })
