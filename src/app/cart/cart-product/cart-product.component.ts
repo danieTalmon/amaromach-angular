@@ -38,7 +38,6 @@ export class CartProductComponent implements OnInit {
   changeProductAmount(productAmount: number) {
      const name: string = this.product.name;
      const amountObject: ProductAmount = {name, amount: productAmount};
-     console.log(typeof productAmount);
      this.changeAmount.emit(amountObject);
      this.selectedAmount = this.amount;
   }
