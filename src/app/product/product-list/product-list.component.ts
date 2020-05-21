@@ -1,6 +1,8 @@
+import { CartService } from './../../services/cart/cart.service';
 import { ProductService } from 'src/app/services/product/product.service';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Product {
   name: string;
@@ -10,6 +12,7 @@ export interface Product {
   limit?: number;
 }
 
+
 @Component({
   selector: 'ar-product-list',
   templateUrl: './product-list.component.html',
@@ -18,17 +21,34 @@ export interface Product {
 export class ProductListComponent implements OnInit {
 
   products: Product[];
-  productsStremar: BehaviorSubject<Product[]>;
+  isProductInCart: Record<string, boolean>;
 
 
-  constructor(private productService: ProductService ) { }
+  constructor(private productService: ProductService, private cartService: CartService) { }
 
   ngOnInit() {
-    this.productService.getProducts().subscribe((products: Product[]) => {
+     this.productService.getProducts$().subscribe((products) => {
       this.products = products;
-      console.log(typeof products);
-      this.productsStremar = new BehaviorSubject<Product[]>(this.products);
+      console.log(this.products);
+      this.productService.getIsInCart().subscribe(isInCart => {
+        this.isProductInCart = isInCart;
+      });
     });
   }
+
+
+  addToCart(productName: string) {
+    this.cartService.addToCart(productName);
+    this.isProductInCart[productName] = true;
+    this.productService.updateIsInCart(this.isProductInCart);
+  }
+
+  removeFromCart(productName: string) {
+    this.cartService.removeFromCart(productName);
+    this.isProductInCart[productName] = false;
+
+    this.productService.updateIsInCart(this.isProductInCart);
+  }
+
 
 }

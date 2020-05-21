@@ -1,5 +1,10 @@
 {
   "extends": "tslint:recommended",
+  "lintOptions": {
+    "exlude":[
+      "./node_modules/"
+    ]
+  },
   "rules": {
     "align": {
       "options": [
@@ -94,6 +99,7 @@
         "named": "never"
       }
     },
+    "typedef" : [true],
     "typedef-whitespace": {
       "options": [
         {

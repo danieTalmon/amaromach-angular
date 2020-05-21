@@ -1,9 +1,12 @@
 import { CartService } from './../services/cart/cart.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
 
 import { CartComponent } from './cart.component';
 import { CartProductComponent } from './cart-product/cart-product.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -13,7 +16,11 @@ import { CartProductComponent } from './cart-product/cart-product.component';
     CartProductComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatSelectModule,
   ],
   providers: [CartService]
 })

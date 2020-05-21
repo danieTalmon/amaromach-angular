@@ -1,1 +1,35 @@
-<p>cart-product works!</p>
+<div class="image">
+    <img src="../../../assets/images/{{product.name}}.jpg">
+  </div>
+<div class="content">
+    <div class="ui large header"> {{product.name}} </div>
+    <div class="ui right floated">
+      <a (click)="removeFromCart(product.name)">
+        <i class="ui large red close icon"></i>
+      </a>
+    </div>
+    <div class="description">
+      <div class="ui grid">
+        <div class="row">
+          <div class="ui medium header"> {{product.description}} </div>
+        </div>
+        <div class="row">
+          <div class="ui four wide column">
+            <div class="ui fluid small header">
+              <i class="small shekel sign icon compact-icon"></i>{{product.price}}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="tree wide column">
+            <input *ngIf="!product.limit"  type="number" (change)="changeProductAmount($event.target.value)" value="amount">
+            <mat-select [(value)]="selectedAmount"  (selectionChange)="changeProductAmount($event.value)" *ngIf="product.limit" >
+              <mat-option *ngFor="let index of numbersArray()" [value]="index">
+                {{index}}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

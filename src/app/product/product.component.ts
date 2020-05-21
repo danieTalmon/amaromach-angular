@@ -1,5 +1,6 @@
 import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import { Product } from './product-list/product-list.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ar-product',
@@ -8,21 +9,34 @@ import { Product } from './product-list/product-list.component';
 })
 export class ProductComponent implements OnInit {
 
-  isOutOfStock: boolean = false;
 
   @Input()
   product: Product;
 
-  @Output()
-  productEmitter = new EventEmitter<Product>();
+  @Input()
+  isInCart: boolean;
 
-  constructor() { }
+  @Output()
+  add: EventEmitter<string> = new EventEmitter<string>();
+
+  @Output()
+  remove: EventEmitter<string> = new EventEmitter<string>();
+
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
   }
 
-  addToCart(product: Product) {
-    this.productEmitter.emit(product);
+  addToCart(productName: string) {
+    this.add.emit(productName);
+  }
+
+  removeFromCart(productName: string) {
+    this.remove.emit(productName);
+  }
+
+  isOutOfStuck() {
+    return this.product.limit === 0;
   }
 
 }

@@ -1,9 +1,18 @@
 <div class="ui fluid card" *ngIf="product" >
     <div class="image">
-      <img class="card-image" src="../../assets/images/{{product.name}}.jpg">
+        <img class="card-image" src="../../assets/images/{{product.name}}.jpg">
+        <div id="out-of-stock" *ngIf="isOutOfStuck()" class="ui compact red message">
+          <div class="ui red header">
+            out-of-stock
+          </div>
+        </div>
     </div>
     <div class="content">
-      <div class="header header-link">{{product.name}}</div>
+      <div class="header header-link">
+        <a routerLink="/amaromach/ng/product/{{product.name}}">
+        {{product.name}}
+        </a>
+      </div>
       <div class="description">
           {{product.description}}
       </div>
@@ -20,8 +29,9 @@
             <p>3/5</p>
           </span>
           <span class="right floated">
-            <button [disabled]='isOutOfStock' class="ui primary button">
-            Add to cart
+            <button (click)='isInCart? removeFromCart(product.name): addToCart(product.name)'
+            class= "ui primary button" [ngClass]="{'black':isInCart, 'primary': !isInCart, 'disabled':isOutOfStuck()}">
+            {{isInCart ? 'Remove from cart': 'Add to cart'}}
           </button>
         </span>
         </div>

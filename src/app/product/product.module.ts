@@ -1,4 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { CartModule } from './../cart/cart.module';
+import { SharedModule } from './../shared/shared.module';
 import { ProductService } from 'src/app/services/product/product.service';
 import { ProductListComponent } from './product-list/product-list.component';
 import { NgModule } from '@angular/core';
@@ -15,7 +17,10 @@ import { ProductInfoComponent } from './product-info/product-info.component';
     ProductInfoComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule,
+    SharedModule,
+    CartModule
   ],
   exports: [
     ProductListComponent,
