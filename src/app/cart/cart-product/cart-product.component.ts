@@ -33,6 +33,7 @@ export class CartProductComponent implements OnInit {
 
   ngOnInit() {
     this.selectedAmount = this.amount;
+    this.amount = this.amount || 1;
   }
 
   changeProductAmount(productAmount: number) {

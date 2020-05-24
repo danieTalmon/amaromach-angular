@@ -22,7 +22,7 @@
         </div>
         <div class="row">
           <div class="tree wide column">
-            <input *ngIf="!product.limit"  type="number" (change)="changeProductAmount($event.target.value)" value="amount">
+            <input *ngIf="!product.limit" required type="number" (change)="changeProductAmount($event.target.value)" value="{{amount}}" min="1">
             <mat-select [(value)]="selectedAmount"  (selectionChange)="changeProductAmount($event.value)" *ngIf="product.limit" >
               <mat-option *ngFor="let index of numbersArray()" [value]="index">
                 {{index}}
