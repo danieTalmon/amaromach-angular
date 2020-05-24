@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { CartService } from './../../services/cart/cart.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -10,17 +11,16 @@ import { CartComponent } from 'src/app/cart/cart.component';
   styleUrls: ['./navbar.component.less']
 })
 export class NavbarComponent implements OnInit {
+  totalProducts$: Observable<number >;
+  readonly imageUrl = 'assets/images/amaromach.png';
 
-  totalProducts: number = 0;
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
     private cartService: CartService) { }
 
   ngOnInit() {
-    this.cartService.getCart().subscribe(cart => {
-      this.totalProducts = Object.keys(cart).length;
-    });
+    this.totalProducts$ = this.cartService.totalProducts();
   }
 
   openCart() {
@@ -30,5 +30,4 @@ export class NavbarComponent implements OnInit {
       maxHeight: 700
     });
   }
-
 }

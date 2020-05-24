@@ -1,9 +1,10 @@
 import { ProductService } from 'src/app/services/product/product.service';
 import { CartService } from './../services/cart/cart.service';
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../product/product-list/product-list.component';
+import { Product } from '../shared/models/product.model';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ProductAmount } from './cart-product/cart-product.component';
+import { combineLatest, Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'ar-cart',
@@ -11,11 +12,8 @@ import { ProductAmount } from './cart-product/cart-product.component';
   styleUrls: ['./cart.component.less']
 })
 export class CartComponent implements OnInit {
-
-  cart: Record<string, number> = {};
-  fullDetailsCart: Product[] = [];
-  products: Product[] = [];
-  isInCart: Record<string, boolean> = {};
+  cartProducts$: Observable< {product: Product, amount: number}[] >;
+  totalPrice$: Observable<number>;
 
   constructor(
     public dialogRef: MatDialogRef<CartComponent>,
@@ -23,59 +21,46 @@ export class CartComponent implements OnInit {
     private productService: ProductService) { }
 
   ngOnInit() {
-    this.cartService.getCart().subscribe(cart => {
-      this.cart = cart;
-      this.getfullDetailsCart();
-    });
-    this.productService.getProducts$().subscribe(products => {
-      this.products = products;
-    });
-    this.productService.getIsInCart().subscribe(isInCart => {
-      this.isInCart = isInCart;
-    });
-  }
+    this.cartProducts$ =
+    combineLatest([this.productService.getProducts$(), this.cartService.getCart$()]).pipe(
+        map(([products, cart]) => {
+          return Object.keys(cart).map(cartProductName => {
+            return {
+              product: products.find(p => p.name === cartProductName),
+               amount: cart[cartProductName]};
+          });
+        })
+      );
 
-  getfullDetailsCart() {
-    let fullDetailsCart = [];
-    Object.keys(this.cart).forEach(productName => {
-      this.productService.getProduct(productName).subscribe(product => {
-        fullDetailsCart.push(product);
-      });
-    });
-    this.fullDetailsCart = fullDetailsCart;
-    }
+    this.totalPrice$ = this.totalPrice();
+  }
 
   removeFromCart(productName: string) {
     this.cartService.removeFromCart(productName);
-    this.isInCart[productName] = false;
-    this.productService.updateIsInCart(this.isInCart);
   }
 
-  changeAmount(productAmount: ProductAmount) {
-    this.cart[productAmount.name] = productAmount.amount;
-    this.cartService.updateCart(this.cart);
+  changeAmount(productAmount: number, productName: string, limit: number | undefined) {
+    this.cartService.changeAmount(productName, productAmount, limit);
   }
 
-  totalPrice() {
-    return this.fullDetailsCart.reduce((acc: number, product: Product) => {
-      if (product) {
-        return acc + this.cart[product.name] * product.price;
-      }
-    }, 0);
+  totalPrice(): Observable<number> {
+    return this.cartProducts$.pipe(
+      map(cartProducts => {
+        return cartProducts.reduce((acc: number, cartProduct: {product: Product, amount: number}) => {
+          if (cartProduct.product) {
+            return acc + cartProduct.amount * cartProduct.product.price;
+            }
+          }, 0);
+      })
+    );
   }
 
   checkout() {
-    this.products.forEach(product => {
-      if (product.limit) {
-        product.limit -= this.cart[product.name];
-      }
-    });
-    this.productService.updateProducts(this.products);
-
-    Object.keys(this.cart).forEach(productName => {
-      this.removeFromCart(productName);
-      });
+    this.cartService.getCart$().pipe(
+      take(1)
+    ).subscribe(cart => {
+      this.productService.updateProductsLimits(cart);
+    })
+    this.cartService.checkout();
   }
-
-
 }

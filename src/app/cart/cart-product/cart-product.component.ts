@@ -1,11 +1,6 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
-import { Product } from 'src/app/product/product-list/product-list.component';
+import { Product } from '../../shared/models/product.model';
 import { FormControl } from '@angular/forms';
-
-export interface ProductAmount {
-  name: string;
-  amount: number;
-}
 
 @Component({
   selector: 'ar-cart-product',
@@ -13,8 +8,6 @@ export interface ProductAmount {
   styleUrls: ['./cart-product.component.less']
 })
 export class CartProductComponent implements OnInit {
-
-
   @Input()
   product: Product;
 
@@ -22,36 +15,36 @@ export class CartProductComponent implements OnInit {
   amount: number;
 
   @Output()
-  changeAmount: EventEmitter<ProductAmount> = new EventEmitter<ProductAmount>();
+  changeAmount: EventEmitter<number>;
 
   @Output()
-  remove: EventEmitter<string> = new EventEmitter<string>();
+  remove: EventEmitter<void>;
 
-  selectedAmount: number;
+  imageUrl: string;
+  arrayOfNumbers: number[];
 
-  constructor() { }
+  constructor() {
+    this.changeAmount = new EventEmitter<number>();
+    this.remove = new EventEmitter<void>();
+   }
 
   ngOnInit() {
-    this.selectedAmount = this.amount;
     this.amount = this.amount || 1;
+    if (this.product) {
+      this.imageUrl = `/assets/images/${this.product.name}.jpg`;
+    }
+    this.arrayOfNumbers = this.numbersArray();
   }
 
   changeProductAmount(productAmount: number) {
-     const name: string = this.product.name;
-     const amountObject: ProductAmount = {name, amount: productAmount};
-     this.changeAmount.emit(amountObject);
-     this.selectedAmount = this.amount;
+     this.changeAmount.emit(productAmount);
   }
 
-
-  removeFromCart(productName: string) {
-    this.remove.emit(productName);
+  removeFromCart() {
+    this.remove.emit();
   }
 
   numbersArray() {
     return [...Array(this.product.limit).keys()].map(x => ++x);
   }
-
-
-
 }

@@ -1,10 +1,10 @@
 <div class="image">
-    <img src="../../../assets/images/{{product.name}}.jpg">
+    <img [src]="imageUrl">
   </div>
 <div class="content">
     <div class="ui large header"> {{product.name}} </div>
     <div class="ui right floated">
-      <a (click)="removeFromCart(product.name)">
+      <a (click)="removeFromCart()">
         <i class="ui large red close icon"></i>
       </a>
     </div>
@@ -16,18 +16,20 @@
         <div class="row">
           <div class="ui four wide column">
             <div class="ui fluid small header">
-              <i class="small shekel sign icon compact-icon"></i>{{product.price}}
+              {{product.price | currency: 'ILS'}}
             </div>
           </div>
         </div>
         <div class="row">
           <div class="column">
-            <input *ngIf="!product.limit" required type="number" (change)="changeProductAmount($event.target.value)" value="{{amount}}" min="1">
-            <mat-select  [(value)]="selectedAmount"  (selectionChange)="changeProductAmount($event.value)" *ngIf="product.limit" >
-              <mat-option *ngFor="let index of numbersArray()" [value]="index">
-                {{index}}
-              </mat-option>
-            </mat-select>
+            <input *ngIf="!product.limit; else elseBlock" type="number" (change)="changeProductAmount($event.target.value)" [value]="amount" min="1">
+            <ng-template #elseBlock>
+              <mat-select   [value]="amount"  (selectionChange)="changeProductAmount($event.value)" *ngIf="product.limit" >
+                <mat-option *ngFor="let index of arrayOfNumbers" [value]="index">
+                  {{index}}
+                </mat-option>
+              </mat-select>
+            </ng-template>
           </div>
         </div>
       </div>

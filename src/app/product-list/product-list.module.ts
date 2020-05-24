@@ -1,11 +1,11 @@
 import { RouterModule } from '@angular/router';
-import { CartModule } from './../cart/cart.module';
-import { SharedModule } from './../shared/shared.module';
+import { CartModule } from '../cart/cart.module';
+import { SharedModule } from '../shared/shared.module';
 import { ProductService } from 'src/app/services/product/product.service';
-import { ProductListComponent } from './product-list/product-list.component';
+import { ProductListComponent } from './product-list.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductComponent } from './product.component';
+import { ProductComponent } from './product/product.component';
 import { ProductInfoComponent } from './product-info/product-info.component';
 
 
@@ -29,4 +29,4 @@ import { ProductInfoComponent } from './product-info/product-info.component';
   ],
   providers: [ProductService]
 })
-export class ProductModule { }
+export class ProductListModule { }

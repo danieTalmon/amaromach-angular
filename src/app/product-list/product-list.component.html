@@ -1,0 +1,5 @@
+<div class="ui link cards four column stretched grid padded">
+  <ar-product *ngFor="let productObject of products$ | async" [product]="productObject.product" [isInCart]="productObject.isInCart"
+  (add)="addToCart(productObject.product.name)" (remove)="removeFromCart(productObject.product.name)" class="column" >
+  </ar-product>
+</div>

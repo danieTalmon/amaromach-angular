@@ -1,4 +1,0 @@
-<div *ngIf="products && isProductInCart"  class="ui link cards four column stretched grid padded">
-  <ar-product *ngFor="let product of products" [product]="product" [isInCart]="isProductInCart[product.name]" (add)="addToCart($event)" (remove)="removeFromCart($event)" class="column" >
-  </ar-product>
-</div>

@@ -1,6 +1,6 @@
 import { SharedModule } from './shared/shared.module';
 import { CartModule } from './cart/cart.module';
-import { ProductModule } from './product/product.module';
+import { ProductListModule } from './product-list/product-list.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -20,7 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     SharedModule,
     CartModule,
-    ProductModule
+    ProductListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

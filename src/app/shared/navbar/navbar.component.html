@@ -3,8 +3,8 @@
       <div class="row no-padding-bottom">
           <div class="four wide column">
               <div id="amaRomach-logo">
-                  <a routerLink="amaromach/ng/products">
-                    <img class="ui huge image" src="assets/images/amaromach.png" alt="">
+                  <a routerLink="/products">
+                    <img class="ui huge image" [src]="imageUrl" alt="">
                   </a>
               </div>
           </div>
@@ -48,7 +48,7 @@
           </div>
             </div>
             <div id="cart-grid" class="ui two wide column">
-                <span id="product-count" class="parenthesis ui orange header">{{totalProducts}}</span>
+                <span id="product-count" class="parenthesis ui orange header">{{totalProducts$ | async}}</span>
                 <div id="cart" class="inline">
                     <i (click)="openCart()" class="ui shop large white right floated icon"></i>
                     <div class="ui medium inverted header cart-header no-margin-top">  cart </div>

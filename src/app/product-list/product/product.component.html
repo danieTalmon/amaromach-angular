@@ -1,6 +1,6 @@
 <div class="ui fluid card" *ngIf="product" >
     <div class="image">
-        <img class="card-image" src="../../assets/images/{{product.name}}.jpg">
+        <img class="card-image" [src]="imageUrl">
         <div id="out-of-stock" *ngIf="isOutOfStuck()" class="ui compact red message">
           <div class="ui red header">
             out-of-stock
@@ -9,7 +9,7 @@
     </div>
     <div class="content">
       <div class="header header-link">
-        <a routerLink="/amaromach/ng/product/{{product.name}}">
+        <a routerLink="/product/{{product.name}}">
         {{product.name}}
         </a>
       </div>
@@ -21,7 +21,7 @@
       <div class="ui list">
         <div class="item">
           <span class="left floated">
-          <i class="shekel sign icon"></i>{{product.price}}
+          {{product.price | currency:'ILS'}}
           </span>
         </div>
         <div class="item">
@@ -29,10 +29,15 @@
             <p>3/5</p>
           </span>
           <span class="right floated">
-            <button (click)='isInCart? removeFromCart(product.name): addToCart(product.name)'
-            class= "ui primary button" [ngClass]="{'black':isInCart, 'primary': !isInCart, 'disabled':isOutOfStuck()}">
-            {{isInCart ? 'Remove from cart': 'Add to cart'}}
+            <button *ngIf="!isInCart; else removeButtonBlock"  (click)='addToCart()'
+            class= "ui primary button" [ngClass]="{'disabled':isOutOfStuck()}">
+              Add to cart
           </button>
+          <ng-template #removeButtonBlock>
+            <button (click)="removeFromCart()" class= "ui black button">
+              Remove from cart
+            </button>
+          </ng-template>
         </span>
         </div>
       </div>

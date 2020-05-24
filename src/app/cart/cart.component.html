@@ -3,11 +3,12 @@
     Your Shopping Cart
   </div>
   <div class="ui divided items">
-    <ar-cart-product *ngFor="let product of fullDetailsCart" [product]="product" [amount] ="cart[product.name]"
-     (changeAmount)="changeAmount($event)" (remove)="removeFromCart($event)" class="item" >
+    <ar-cart-product *ngFor="let cartProduct of cartProducts$ | async" [product]="cartProduct.product" [amount] ="cartProduct.amount"
+     (changeAmount)="changeAmount($event,cartProduct.product.name,cartProduct.product.limit)"
+      (remove)="removeFromCart(cartProduct.product.name)" class="item" >
     </ar-cart-product>
     <div id ="total-price" class="ui floated left">
-      <p>Total Price: <i class="shekel sign icon"></i>{{totalPrice()}} </p>
+      <p>Total Price: {{(totalPrice$ | async) | currency: 'ILS'}} </p>
     </div>
   </div>
   <div mat-dialog-actions align="end" class="ui right floated">

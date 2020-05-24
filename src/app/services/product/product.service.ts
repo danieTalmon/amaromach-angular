@@ -1,58 +1,44 @@
 import { map, catchError } from 'rxjs/operators';
-import { of, Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import * as ProductJson from 'src/assets/products.json';
-import { Product } from 'src/app/product/product-list/product-list.component';
+import { Product } from '../../shared/models/product.model';
+import { ProductComponent } from 'src/app/product-list/product/product.component';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ProductService {
-  private products$: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
-  private isProductInCart$: BehaviorSubject<Record<string, boolean>> = new BehaviorSubject<Record<string, boolean>> ({});
+  readonly productURL: string = 'assets/products.json';
+  private products$: BehaviorSubject<Product[]>;
 
   constructor(private http: HttpClient) {
-    this.getProducts();
+    this.products$ = new BehaviorSubject<Product[]>([]);
+    this.loadProducts();
   }
 
-  getProducts$() {
+  getProducts$(): Observable<Product[]> {
     return this.products$.asObservable();
   }
 
-  getIsInCart() {
-    return this.isProductInCart$.asObservable();
+  loadProducts() {
+    return this.http.get<Product[]>(this.productURL).subscribe(products => {
+        this.products$.next(products);
+      }, err =>  {
+        throw(err);
+      });
   }
 
-  initIsProductInCart(products: Product[]) {
-    let isProductInCart: Record<string, boolean> = {};
-    products.forEach( (product) => {
-      isProductInCart[product.name] = false;
+  getProduct$(productName: string): Observable<Product> {
+    return this.products$.pipe(
+      map(products => products.find(product => product.name === productName))
+    );
+  }
+
+  updateProductsLimits(cart: Record<string, number>) {
+    let products = this.products$.getValue();
+    Object.keys(cart).forEach(productName => {
+      const productIndex: number = products.findIndex(product => product.name === productName);
+      products[productIndex].limit -= cart[productName];
     });
-    this.updateIsInCart(isProductInCart);
-  }
-
-  getProducts() {
-    const productURL: string = 'assets/products.json';
-    this.http.get<Product[]>(productURL).subscribe( products => {
-      this.updateProducts(products);
-      this.initIsProductInCart(products);
-    }, err =>  {
-      throw(err);
-    });
-  }
-
-  getProduct(productName: string): Observable<Product> {
-    const products: Product[] = this.products$.getValue();
-    return of(products.find(product => product.name === productName));
-  }
-
-  updateProducts(products: Product[]) {
     this.products$.next(products);
-  }
-
-  updateIsInCart(products: Record<string, boolean>) {
-    this.isProductInCart$.next(products);
   }
 }

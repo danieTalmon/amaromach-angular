@@ -1,16 +1,14 @@
-import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class CartService {
-
   private cart$: BehaviorSubject<Record<string, number>> = new BehaviorSubject<Record<string, number>>({});
 
   constructor() { }
 
-  getCart(): Observable<Record<string, number>> {
+  getCart$(): Observable<Record<string, number>> {
     return this.cart$.asObservable();
   }
 
@@ -18,30 +16,32 @@ export class CartService {
     let cart: Record<string, number> = this.cart$.getValue();
     cart[productName] = 1;
 
-    this.updateCart(cart);
+    this.cart$.next(cart);
   }
 
   removeFromCart(productName: string) {
     let cart: Record<string, number> = this.cart$.getValue();
     delete cart[productName];
 
-
-    this.updateCart(cart);
+    this.cart$.next(cart);
   }
 
   changeAmount(productName: string, newAmount: number, limit: number | null) {
     let cart: Record<string, number> = this.cart$.getValue();
-    if (!limit || newAmount < limit) {
+    if (!limit || newAmount <= limit) {
       cart[productName] = newAmount;
     }
-  }
 
-  updateCart(cart: Record<string, number>) {
     this.cart$.next(cart);
   }
 
+  checkout() {
+    this.cart$.next({});
+  }
+
   totalProducts() {
-    const cart: Record<string, number> = this.cart$.getValue();
-    return Object.keys(cart).length;
+    return this.cart$.pipe(
+      map(cart => Object.keys(cart).length)
+    );
   }
 }
