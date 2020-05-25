@@ -1,12 +1,15 @@
+import { Product } from '../../shared/models/product.model';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class CartService {
-  private cart$: BehaviorSubject<Record<string, number>> = new BehaviorSubject<Record<string, number>>({});
+  private cart$: BehaviorSubject<Record<string, number>>;
 
-  constructor() { }
+  constructor() {
+    this.cart$ = new BehaviorSubject<Record<string, number>>({});
+  }
 
   getCart$(): Observable<Record<string, number>> {
     return this.cart$.asObservable();
@@ -26,10 +29,10 @@ export class CartService {
     this.cart$.next(cart);
   }
 
-  changeAmount(productName: string, newAmount: number, limit: number | null) {
+  changeAmount(product: Product, newAmount: number) {
     let cart: Record<string, number> = this.cart$.getValue();
-    if (!limit || newAmount <= limit) {
-      cart[productName] = newAmount;
+    if (!product.limit || newAmount <= product.limit) {
+      cart[product.name] = newAmount;
     }
 
     this.cart$.next(cart);
@@ -39,9 +42,7 @@ export class CartService {
     this.cart$.next({});
   }
 
-  totalProducts() {
-    return this.cart$.pipe(
-      map(cart => Object.keys(cart).length)
-    );
+  totalProducts(): Observable<number> {
+    return this.cart$.pipe(map((cart) => Object.keys(cart).length));
   }
 }

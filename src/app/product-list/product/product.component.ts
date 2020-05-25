@@ -1,22 +1,19 @@
-import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Product } from '../../shared/models/product.model';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ar-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.less']
+  styleUrls: ['./product.component.less'],
 })
 export class ProductComponent implements OnInit {
   @Input()
   product: Product;
-
   @Input()
   isInCart: boolean;
-
   @Output()
   add: EventEmitter<void>;
-
   @Output()
   remove: EventEmitter<void>;
 

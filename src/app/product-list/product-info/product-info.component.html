@@ -5,7 +5,7 @@
         <div class="ui centered aliened item" *ngIf="(product$ | async) as product">
             <img class= "ui medium image" src="../../assets/images/{{product.name}}.jpg">
           <div class="content">
-            <div id="product-header" class="ui large header"> {{(product$ | async).name}}</div>
+            <div id="product-header" class="ui large header"> {{product.name}}</div>
             <div class="description">
               <div class="ui grid">
                 <div class="row">

@@ -10,13 +10,10 @@ import { FormControl } from '@angular/forms';
 export class CartProductComponent implements OnInit {
   @Input()
   product: Product;
-
   @Input()
   amount: number;
-
   @Output()
   changeAmount: EventEmitter<number>;
-
   @Output()
   remove: EventEmitter<void>;
 
@@ -44,7 +41,7 @@ export class CartProductComponent implements OnInit {
     this.remove.emit();
   }
 
-  numbersArray() {
+  private numbersArray() {
     return [...Array(this.product.limit).keys()].map(x => ++x);
   }
 }

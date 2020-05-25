@@ -9,28 +9,30 @@ import { map, take } from 'rxjs/operators';
 @Component({
   selector: 'ar-cart',
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.less']
+  styleUrls: ['./cart.component.less'],
 })
 export class CartComponent implements OnInit {
-  cartProducts$: Observable< {product: Product, amount: number}[] >;
+  cartProducts$: Observable<{ product: Product; amount: number }[]>;
   totalPrice$: Observable<number>;
 
   constructor(
     public dialogRef: MatDialogRef<CartComponent>,
     private cartService: CartService,
-    private productService: ProductService) { }
+    private productService: ProductService
+  ) {}
 
   ngOnInit() {
-    this.cartProducts$ =
-    combineLatest([this.productService.getProducts$(), this.cartService.getCart$()]).pipe(
-        map(([products, cart]) => {
-          return Object.keys(cart).map(cartProductName => {
-            return {
-              product: products.find(p => p.name === cartProductName),
-               amount: cart[cartProductName]};
-          });
-        })
-      );
+    this.cartProducts$ = combineLatest([
+      this.productService.getProducts$(),
+      this.cartService.getCart$(),
+    ]).pipe(
+      map(([products, cart]) =>
+        Object.keys(cart).map((cartProductName) => ({
+          product: products.find((product) => product.name === cartProductName),
+          amount: cart[cartProductName],
+        }))
+      )
+    );
 
     this.totalPrice$ = this.totalPrice();
   }
@@ -39,28 +41,32 @@ export class CartComponent implements OnInit {
     this.cartService.removeFromCart(productName);
   }
 
-  changeAmount(productAmount: number, productName: string, limit: number | undefined) {
-    this.cartService.changeAmount(productName, productAmount, limit);
-  }
-
-  totalPrice(): Observable<number> {
-    return this.cartProducts$.pipe(
-      map(cartProducts => {
-        return cartProducts.reduce((acc: number, cartProduct: {product: Product, amount: number}) => {
-          if (cartProduct.product) {
-            return acc + cartProduct.amount * cartProduct.product.price;
-            }
-          }, 0);
-      })
-    );
+  changeAmount(product: Product, productAmount: number) {
+    this.cartService.changeAmount(product, productAmount);
   }
 
   checkout() {
-    this.cartService.getCart$().pipe(
-      take(1)
-    ).subscribe(cart => {
-      this.productService.updateProductsLimits(cart);
-    })
-    this.cartService.checkout();
+    this.cartService
+      .getCart$()
+      .pipe(take(1))
+      .subscribe((cart) => {
+        this.productService.updateProductsLimits(cart);
+        this.cartService.checkout();
+      });
+  }
+
+  private totalPrice(): Observable<number> {
+    return this.cartProducts$.pipe(
+      map((cartProducts) => {
+        return cartProducts.reduce(
+          (acc: number, cartProduct: { product: Product; amount: number }) => {
+            if (cartProduct.product) {
+              return acc + cartProduct.amount * cartProduct.product.price;
+            }
+          },
+          0
+        );
+      })
+    );
   }
 }

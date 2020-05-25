@@ -1,37 +1,46 @@
 <div class="image">
-    <img [src]="imageUrl">
-  </div>
+  <img [src]="imageUrl" />
+</div>
 <div class="content">
-    <div class="ui large header"> {{product.name}} </div>
-    <div class="ui right floated">
-      <a (click)="removeFromCart()">
-        <i class="ui large red close icon"></i>
-      </a>
-    </div>
-    <div class="description">
-      <div class="ui grid">
-        <div class="row">
-          <div class="ui medium header"> {{product.description}} </div>
-        </div>
-        <div class="row">
-          <div class="ui four wide column">
-            <div class="ui fluid small header">
-              {{product.price | currency: 'ILS'}}
-            </div>
+  <div class="ui large header">{{ product.name }}</div>
+  <div class="ui right floated">
+    <a (click)="removeFromCart()">
+      <i class="ui large red close icon"></i>
+    </a>
+  </div>
+  <div class="description">
+    <div class="ui grid">
+      <div class="row">
+        <div class="ui medium header">{{ product.description }}</div>
+      </div>
+      <div class="row">
+        <div class="ui four wide column">
+          <div class="ui fluid small header">
+            {{ product.price | currency: "ILS" }}
           </div>
         </div>
-        <div class="row">
-          <div class="column">
-            <input *ngIf="!product.limit; else elseBlock" type="number" (change)="changeProductAmount($event.target.value)" [value]="amount" min="1">
-            <ng-template #elseBlock>
-              <mat-select   [value]="amount"  (selectionChange)="changeProductAmount($event.value)" *ngIf="product.limit" >
-                <mat-option *ngFor="let index of arrayOfNumbers" [value]="index">
-                  {{index}}
-                </mat-option>
-              </mat-select>
-            </ng-template>
-          </div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <input
+            *ngIf="!product.limit; else select"
+            type="number"
+            (change)="changeProductAmount($event.target.value)"
+            [value]="amount"
+            min="1"
+          />
+          <ng-template #select>
+            <mat-select
+              [value]="amount"
+              (selectionChange)="changeProductAmount($event.value)"
+            >
+              <mat-option *ngFor="let index of arrayOfNumbers" [value]="index">
+                {{ index }}
+              </mat-option>
+            </mat-select>
+          </ng-template>
         </div>
       </div>
     </div>
   </div>
+</div>

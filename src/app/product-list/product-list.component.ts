@@ -7,21 +7,25 @@ import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ar-product-list',
-  templateUrl: './product-list.component.html'
+  templateUrl: './product-list.component.html',
 })
 export class ProductListComponent implements OnInit {
-  products$: Observable<{product: Product, isInCart: boolean}[] >;
+  products$: Observable<{ product: Product; isInCart: boolean }[]>;
 
-  constructor(private productService: ProductService, private cartService: CartService) { }
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit() {
-     this.products$ = combineLatest([this.productService.getProducts$(), this.cartService.getCart$()])
-     .pipe(
-       map(([products, cart]) => {
-          return products.map(product => {
-           return {product, isInCart: (!!cart[product.name])};
-         });
-       }));
+    this.products$ = combineLatest([
+      this.productService.getProducts$(),
+      this.cartService.getCart$(),
+    ]).pipe(
+      map(([products, cart]) =>
+        products.map((product) => ({ product, isInCart: !!cart[product.name] }))
+      )
+    );
   }
 
   addToCart(productName: string) {

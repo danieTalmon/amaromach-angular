@@ -19,26 +19,33 @@ export class ProductService {
     return this.products$.asObservable();
   }
 
-  loadProducts() {
-    return this.http.get<Product[]>(this.productURL).subscribe(products => {
-        this.products$.next(products);
-      }, err =>  {
-        throw(err);
-      });
-  }
-
   getProduct$(productName: string): Observable<Product> {
     return this.products$.pipe(
-      map(products => products.find(product => product.name === productName))
+      map((products) =>
+        products.find((product) => product.name === productName)
+      )
     );
   }
 
   updateProductsLimits(cart: Record<string, number>) {
     let products = this.products$.getValue();
-    Object.keys(cart).forEach(productName => {
-      const productIndex: number = products.findIndex(product => product.name === productName);
+    Object.keys(cart).forEach((productName) => {
+      const productIndex: number = products.findIndex(
+        (product) => product.name === productName
+      );
       products[productIndex].limit -= cart[productName];
     });
     this.products$.next(products);
+  }
+
+  private loadProducts() {
+    return this.http.get<Product[]>(this.productURL).subscribe(
+      (products) => {
+        this.products$.next(products);
+      },
+      (err) => {
+        throw err;
+      }
+    );
   }
 }
