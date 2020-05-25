@@ -1,0 +1,53 @@
+<div class="ui fluid card" *ngIf="product">
+  <div class="image">
+    <img class="card-image" [src]="imageUrl" />
+    <div
+      id="out-of-stock"
+      *ngIf="isOutOfStuck()"
+      class="ui compact red message"
+    >
+      <div class="ui red header">
+        out-of-stock
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="header header-link">
+      <a routerLink="/product/{{ product.name }}">
+        {{ product.name }}
+      </a>
+    </div>
+    <div class="description">
+      {{ product.description }}
+    </div>
+  </div>
+  <div class="extra content">
+    <div class="ui list">
+      <div class="item">
+        <span class="left floated">
+          {{ product.price | currency: "ILS" }}
+        </span>
+      </div>
+      <div class="item">
+        <span class="left floated">
+          <p>3/5</p>
+        </span>
+        <span class="right floated">
+          <button
+            *ngIf="!isInCart; else removeButton"
+            (click)="addToCart()"
+            class="ui primary button"
+            [ngClass]="{ disabled: isOutOfStuck() }"
+          >
+            Add to cart
+          </button>
+          <ng-template #removeButton>
+            <button (click)="removeFromCart()" class="ui black button">
+              Remove from cart
+            </button>
+          </ng-template>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

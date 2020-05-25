@@ -1,0 +1,31 @@
+<div class="ui model">
+  <div class="ui header">
+    Your Shopping Cart
+  </div>
+  <div class="ui divided items">
+    <ar-cart-product
+      *ngFor="let cartProduct of cartProducts$ | async"
+      [product]="cartProduct.product"
+      [amount]="cartProduct.amount"
+      (changeAmount)="changeAmount(cartProduct.product, $event)"
+      (remove)="removeFromCart(cartProduct.product.name)"
+      class="item"
+    >
+    </ar-cart-product>
+    <div id="total-price" class="ui floated left">
+      <p>Total Price: {{ totalPrice$ | async | currency: "ILS" }}</p>
+    </div>
+  </div>
+  <div mat-dialog-actions align="end" class="ui right floated">
+    <div
+      id="close-modal"
+      (click)="dialogRef.close()"
+      class="ui black cancel button"
+    >
+      continue shopping
+    </div>
+    <div id="approve-modal" (click)="checkout()" class="ui primary button">
+      Checkout <i class="cart shopping icon"></i>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="ui inverted segment">
+  <div class="ui grid">
+    <div class="row no-padding-bottom">
+      <div class="four wide column">
+        <div id="amaRomach-logo">
+          <a routerLink="/products">
+            <img class="ui huge image" [src]="imageUrl" alt="" />
+          </a>
+        </div>
+      </div>
+      <div class="eight wide column">
+        <div id="amaRomach-search-bar">
+          <div class="ui small left fluid action input">
+            <input type="text" placeholder="Search..." />
+            <button class="ui primary button">
+              <i class="ui large search icon"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row no-padding-bottom">
+      <div
+        id="browse-container"
+        class="ui right floated center aligned two wide column"
+      >
+        <div
+          class="ui inverted segment no-padding-bottom no-padding-right no-padding-left"
+        >
+          <div
+            id="browse-item"
+            mat-button
+            [matMenuTriggerFor]="menu"
+            class="ui inline floating dropdown right floated"
+          >
+            <div class="ui medium inverted header text">Account&Lists</div>
+            <i class="ui large dropdown icon"></i>
+            <mat-menu class="fluid" #menu="matMenu">
+              <div class="ui two column relaxed divided grid">
+                <div class="row">
+                  <div class="column">
+                    <div class="ui medium header">Your Account</div>
+                    <div class="ui link list">
+                      <a class="item">SIGN IN</a>
+                      <a class="item">SIGN OUT</a>
+                    </div>
+                  </div>
+                  <div class="column">
+                    <div class="ui medium header">Your List</div>
+                    <div class="ui link list">
+                      <a class="item">Create New List</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+      <div id="cart-grid" class="ui two wide column">
+        <span id="product-count" class="parenthesis ui orange header">{{
+          totalProducts$ | async
+        }}</span>
+        <div id="cart" class="inline">
+          <i
+            (click)="openCart()"
+            class="ui shop large white right floated icon"
+          ></i>
+          <div class="ui medium inverted header cart-header no-margin-top">
+            cart
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
