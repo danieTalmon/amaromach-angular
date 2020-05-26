@@ -6,12 +6,8 @@ module.exports = {
   preset: "jest-preset-angular",
   roots: ["<rootDir>/src", "<rootDir>"],
   setupFiles: [],
-  //setupFilesAfterEnv: "<rootDir>/src/setup-jest.ts",
   modulePaths: ["<rootDir>/dist"],
-  moduleNameMapper: {
-    "@amaromach-angular/(.*)": "<rootDir>/amaromach-angular/src/$1",
-  },
-  testMatch: ["**/amaromach-angular/**/services/**/*.spec.ts"],
+  testMatch: ["**/amaromach-angular/**/services/product/*.spec.ts"],
   globals: {
     "ts-jest": {
       ...tsJestPreset,

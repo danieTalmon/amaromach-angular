@@ -40,12 +40,33 @@ describe('ProductService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+    //expect(1).toEqual(2);
   });
 
   it('should has products', (done) => {
     const products$ = service.getProducts$();
     products$.subscribe((products) => {
       expect(products).toEqual(productsMock);
+      done();
+    });
+  });
+
+  it('should has product', (done) => {
+    const products$ = service.getProduct$('test3');
+    products$.subscribe((product) => {
+      expect(product.name).toEqual('test3');
+      expect(product.price).toEqual(190);
+      done();
+    });
+  });
+
+  it('should reduce product limit', (done) => {
+    const fakeCart: Record<string, number> = { test2: 5, test4: 10 };
+    service.updateProductsLimits(fakeCart);
+    const products$ = service.getProducts$();
+    products$.subscribe((product) => {
+      expect(product[1].limit).toEqual(0);
+      expect(product[3].limit).toEqual(19);
       done();
     });
   });
