@@ -7,7 +7,11 @@ module.exports = {
   roots: ["<rootDir>/src", "<rootDir>"],
   setupFiles: [],
   modulePaths: ["<rootDir>/dist"],
-  testMatch: ["**/amaromach-angular/**/services/product/*.spec.ts"],
+  testMatch: [
+    "<rootDir>/src/app/product-list/product/product.component.spec.ts",
+    "<rootDir>/src/app/cart/cart.component.spec.ts",
+    "<rootDir>/src/app/services/**/**.spec.ts"
+  ],
   globals: {
     "ts-jest": {
       ...tsJestPreset,
