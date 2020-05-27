@@ -1,3 +1,5 @@
+import { mockProduct } from './../product-list/mock/mock-product';
+import { Cart } from './../shared/models/cart.model';
 import { Product } from './../shared/models/product.model';
 import { MatSelectModule } from '@angular/material/select';
 import { CartProductComponent } from './cart-product/cart-product.component';
@@ -11,23 +13,17 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
 
 describe('CartComponent', () => {
-  const product: Product = {
-    name: 'test1',
-    description: 'test1 description',
-    price: 40,
-    limit: 5,
-  };
   const amount: number = 3;
-  const cart: Record<string, number> = { test1: amount };
-  const products: Product[] = [product];
+  const cart: Cart = { test1: amount };
+  const products: Product[] = [mockProduct];
 
   let cartComponent: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
-  let mockCartService = mock(CartService);
+  let mockCartService: CartService = mock(CartService);
   when(mockCartService.getCart$()).thenReturn(of(cart));
-  let mockProductService = mock(ProductService);
+  let mockProductService: ProductService = mock(ProductService);
   when(mockProductService.getProducts$()).thenReturn(of(products));
-  let mockMatDialog = mock(MatDialogRef);
+  let mockMatDialog: MatDialogRef<CartComponent> = mock(MatDialogRef);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -52,20 +48,21 @@ describe('CartComponent', () => {
   });
 
   it('should remove from cart', () => {
-    cartComponent.removeFromCart('test2');
+    cartComponent.removeFromCart(mockProduct.name);
 
-    verify(mockCartService.removeFromCart('test2')).called();
+    verify(mockCartService.removeFromCart(mockProduct.name)).called();
   });
 
   it('should change the amount of the cart product', () => {
-    cartComponent.changeAmount(product, 3);
+    const newAmount: number = 3;
+    cartComponent.changeAmount(mockProduct, newAmount);
 
-    verify(mockCartService.changeAmount(product, 3)).called();
+    verify(mockCartService.changeAmount(mockProduct, 3)).called();
   });
 
   it('should get the cart total price', (done) => {
     cartComponent.totalPrice$.subscribe((totalPrice) => {
-      expect(totalPrice).toEqual(120);
+      expect(totalPrice).toEqual(amount * mockProduct.price);
       done();
     });
   });

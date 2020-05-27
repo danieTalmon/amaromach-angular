@@ -1,3 +1,4 @@
+import { mockProduct } from './../mock/mock-product';
 import { Product } from './../../shared/models/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -7,22 +8,9 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { mock, instance } from 'ts-mockito';
 
 describe('ProductComponent', () => {
-  const product1: Product = {
-    name: 'test1',
-    description: 'test1 description',
-    price: 40,
-    limit: 5,
-  };
-  const product2: Product = {
-    name: 'test2',
-    description: 'test2 description',
-    price: 50,
-    limit: 0,
-  };
-
   let productComponent: ProductComponent;
   let fixture: ComponentFixture<ProductComponent>;
-  let mockActivatedRoute = mock(ActivatedRoute);
+  let mockActivatedRoute: ActivatedRoute = mock(ActivatedRoute);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -43,21 +31,24 @@ describe('ProductComponent', () => {
   it('should create', () => {
     expect(productComponent).toBeTruthy();
   });
+
   it('should emit remove event', () => {
     spyOn(productComponent.remove, 'emit');
     productComponent.removeFromCart();
     expect(productComponent.remove.emit).toHaveBeenCalled();
   });
+
   it('should emit add event', () => {
     spyOn(productComponent.add, 'emit');
     productComponent.addToCart();
     expect(productComponent.add.emit).toHaveBeenCalled();
   });
+
   it('should return is out of stock', () => {
-    productComponent.product = product1;
+    productComponent.product = mockProduct;
     expect(productComponent.isOutOfStuck()).toEqual(false);
 
-    productComponent.product = product2;
+    productComponent.product = { ...mockProduct, limit: 0 };
     expect(productComponent.isOutOfStuck()).toEqual(true);
   });
 });

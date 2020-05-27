@@ -1,25 +1,20 @@
+import { Cart } from './../../shared/models/cart.model';
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { TestBed, getTestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController,
+  TestRequest,
 } from '@angular/common/http/testing';
 import { ProductService } from './product.service';
 import { mock, instance, when } from 'ts-mockito';
 import { Product } from 'src/app/shared/models/product.model';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { productsMock } from 'src/app/product-list/mock/mock-product';
 
 describe('ProductService', () => {
-  const productsMock: Product[] = [
-    { name: 'test1', description: 'test1 description', price: 120, limit: 20 },
-    { name: 'test2', description: 'test2 description', price: 150, limit: 5 },
-    { name: 'test3', description: 'test3 description', price: 190 },
-    { name: 'test4', description: 'test4 description', price: 220, limit: 29 },
-    { name: 'test5', description: 'test5 description', price: 1120, limit: 45 },
-    { name: 'test6', description: 'test6 description', price: 1728, limit: 10 },
-  ];
-  const productURL = 'assets/products.json';
+  const productURL: string = 'assets/products.json';
 
   let service: ProductService;
   let injector: TestBed;
@@ -34,39 +29,52 @@ describe('ProductService', () => {
     injector = getTestBed();
     service = injector.inject(ProductService);
     mockHttpService = injector.inject(HttpTestingController);
-    const loadProducts = mockHttpService.expectOne(productURL);
+    const loadProducts: TestRequest = mockHttpService.expectOne(productURL);
     loadProducts.flush(productsMock);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-    //expect(1).toEqual(2);
   });
 
-  it('should has products', (done) => {
-    const products$ = service.getProducts$();
-    products$.subscribe((products) => {
+  it('should load products', (done) => {
+    service.getProducts$().subscribe((products) => {
       expect(products).toEqual(productsMock);
       done();
     });
   });
 
-  it('should has product', (done) => {
-    const products$ = service.getProduct$('test3');
-    products$.subscribe((product) => {
-      expect(product.name).toEqual('test3');
-      expect(product.price).toEqual(190);
+  it('should get product by name', (done) => {
+    service.getProduct$(productsMock[0].name).subscribe((product) => {
+      expect(product.name).toEqual(productsMock[0].name);
+      expect(product.price).toEqual(productsMock[0].price);
+      done();
+    });
+  });
+
+  it('should get product by name (wrong name)', (done) => {
+    const fakeProductName: string = 'test10';
+    service.getProduct$(fakeProductName).subscribe((product) => {
+      expect(product).toEqual(undefined);
       done();
     });
   });
 
   it('should reduce product limit', (done) => {
-    const fakeCart: Record<string, number> = { test2: 5, test4: 10 };
+    const fakeCart: Cart = {
+      [productsMock[1].name]: 5,
+      [productsMock[3].name]: 10,
+    };
+    const mockOldLimit1: number = productsMock[1].limit;
+    const mockOldLimit2: number = productsMock[3].limit;
     service.updateProductsLimits(fakeCart);
-    const products$ = service.getProducts$();
-    products$.subscribe((product) => {
-      expect(product[1].limit).toEqual(0);
-      expect(product[3].limit).toEqual(19);
+    service.getProducts$().subscribe((products) => {
+      expect(products[1].limit).toEqual(
+        mockOldLimit1 - fakeCart[productsMock[1].name]
+      );
+      expect(products[3].limit).toEqual(
+        mockOldLimit2 - fakeCart[productsMock[3].name]
+      );
       done();
     });
   });
