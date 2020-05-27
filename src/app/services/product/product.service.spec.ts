@@ -26,9 +26,8 @@ describe('ProductService', () => {
       providers: [ProductService],
       schemas: [NO_ERRORS_SCHEMA],
     });
-    injector = getTestBed();
-    service = injector.inject(ProductService);
-    mockHttpService = injector.inject(HttpTestingController);
+    service = TestBed.get(ProductService);
+    mockHttpService = TestBed.get(HttpTestingController);
     const loadProducts: TestRequest = mockHttpService.expectOne(productURL);
     loadProducts.flush(productsMock);
   });
