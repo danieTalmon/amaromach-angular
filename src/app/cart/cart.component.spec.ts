@@ -1,4 +1,4 @@
-import { mockProduct } from '../product-list/mock/product-list.mock';
+import { mockProduct } from './../product-list/mock/product-list.mock';
 import { Cart } from './../shared/models/cart.model';
 import { Product } from './../shared/models/product.model';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,7 +14,7 @@ import { of } from 'rxjs';
 
 describe('CartComponent', () => {
   const amount: number = 3;
-  const cart: Cart = { test1: amount };
+  const cart: Cart = { [mockProduct.name]: amount };
   const products: Product[] = [mockProduct];
 
   let cartComponent: CartComponent;
@@ -45,6 +45,14 @@ describe('CartComponent', () => {
 
   it('should create', () => {
     expect(cartComponent).toBeTruthy();
+  });
+
+  it('should init cartProduct observable', (done) => {
+    const cartProduct = { product: mockProduct, amount };
+    cartComponent.cartProducts$.subscribe((CartProducts) => {
+      expect(CartProducts[0]).toEqual(cartProduct);
+      done();
+    });
   });
 
   it('should remove from cart', () => {
