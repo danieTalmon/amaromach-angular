@@ -11,24 +11,22 @@ import { ProductService } from './product.service';
 import { mock, instance, when } from 'ts-mockito';
 import { Product } from 'src/app/shared/models/product.model';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { productsMock } from 'src/app/product-list/mock/mock-product';
+import { productsMock } from 'src/app/product-list/mock/product-list.mock';
 
 describe('ProductService', () => {
-  const productURL: string = 'assets/products.json';
-
   let service: ProductService;
-  let injector: TestBed;
   let mockHttpService: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [ProductService],
-      schemas: [NO_ERRORS_SCHEMA],
     });
     service = TestBed.get(ProductService);
     mockHttpService = TestBed.get(HttpTestingController);
-    const loadProducts: TestRequest = mockHttpService.expectOne(productURL);
+    const loadProducts: TestRequest = mockHttpService.expectOne(
+      service['productURL']
+    );
     loadProducts.flush(productsMock);
   });
 
@@ -51,7 +49,7 @@ describe('ProductService', () => {
     });
   });
 
-  it('should get product by name (wrong name)', (done) => {
+  it('should get undefined when try to get product by name', (done) => {
     const fakeProductName: string = 'test10';
     service.getProduct$(fakeProductName).subscribe((product) => {
       expect(product).toEqual(undefined);

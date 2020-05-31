@@ -1,4 +1,4 @@
-import { Product } from './../../shared/models/product.model';
+import { Product } from '../../shared/models/product.model';
 
 export const mockProduct: Product = {
   name: 'test1',

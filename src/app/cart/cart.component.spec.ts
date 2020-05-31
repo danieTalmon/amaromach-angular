@@ -1,4 +1,4 @@
-import { mockProduct } from './../product-list/mock/mock-product';
+import { mockProduct } from '../product-list/mock/product-list.mock';
 import { Cart } from './../shared/models/cart.model';
 import { Product } from './../shared/models/product.model';
 import { MatSelectModule } from '@angular/material/select';
@@ -19,11 +19,11 @@ describe('CartComponent', () => {
 
   let cartComponent: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
-  let mockCartService: CartService = mock(CartService);
+  const mockCartService: CartService = mock(CartService);
   when(mockCartService.getCart$()).thenReturn(of(cart));
-  let mockProductService: ProductService = mock(ProductService);
+  const mockProductService: ProductService = mock(ProductService);
   when(mockProductService.getProducts$()).thenReturn(of(products));
-  let mockMatDialog: MatDialogRef<CartComponent> = mock(MatDialogRef);
+  const mockMatDialog: MatDialogRef<CartComponent> = mock(MatDialogRef);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -57,7 +57,7 @@ describe('CartComponent', () => {
     const newAmount: number = 3;
     cartComponent.changeAmount(mockProduct, newAmount);
 
-    verify(mockCartService.changeAmount(mockProduct, 3)).called();
+    verify(mockCartService.changeAmount(mockProduct, newAmount)).called();
   });
 
   it('should get the cart total price', (done) => {

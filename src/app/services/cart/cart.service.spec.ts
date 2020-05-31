@@ -3,21 +3,23 @@ import { Product } from './../../shared/models/product.model';
 import { TestBed } from '@angular/core/testing';
 
 import { CartService } from './cart.service';
-import { productsMock } from 'src/app/product-list/mock/mock-product';
+import { productsMock } from 'src/app/product-list/mock/product-list.mock';
 
 describe('CartService', () => {
   let service: CartService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = new CartService();
+    TestBed.configureTestingModule({
+      providers: [CartService],
+    });
+    service = TestBed.get(CartService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get the an empty cart', (done) => {
+  it('should get an empty cart', (done) => {
     service.getCart$().subscribe((cart) => {
       expect(cart).toEqual({});
       done();

@@ -1,4 +1,4 @@
-import { mockProduct } from './../mock/mock-product';
+import { mockProduct } from '../mock/product-list.mock';
 import { Product } from './../../shared/models/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -10,7 +10,7 @@ import { mock, instance } from 'ts-mockito';
 describe('ProductComponent', () => {
   let productComponent: ProductComponent;
   let fixture: ComponentFixture<ProductComponent>;
-  let mockActivatedRoute: ActivatedRoute = mock(ActivatedRoute);
+  const mockActivatedRoute: ActivatedRoute = mock(ActivatedRoute);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

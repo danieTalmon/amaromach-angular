@@ -20,7 +20,6 @@
     ]
   },
   "angularCompilerOptions": {
-    //"type": ["jasmine"],
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }

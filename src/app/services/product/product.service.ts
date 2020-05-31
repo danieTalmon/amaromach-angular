@@ -7,7 +7,7 @@ import { ProductComponent } from 'src/app/product-list/product/product.component
 
 @Injectable()
 export class ProductService {
-  readonly productURL: string = 'assets/products.json';
+  private readonly productURL: string = 'assets/products.json';
   private products$: BehaviorSubject<Product[]>;
 
   constructor(private http: HttpClient) {
