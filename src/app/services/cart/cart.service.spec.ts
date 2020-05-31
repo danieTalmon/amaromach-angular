@@ -3,7 +3,7 @@ import { Product } from './../../shared/models/product.model';
 import { TestBed } from '@angular/core/testing';
 
 import { CartService } from './cart.service';
-import { productsMock } from 'src/app/product-list/mock/product-list.mock';
+import { productsMock } from '../../product-list/mock/product-list.mock';
 
 describe('CartService', () => {
   let service: CartService;
