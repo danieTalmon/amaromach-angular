@@ -4,3 +4,5 @@ export interface Product {
   price: number;
   limit?: number;
 }
+
+export type ProductListState = Product[];

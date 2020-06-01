@@ -1,9 +1,17 @@
+import { remove } from './../cart/actions/cart.actions';
+import { selectProductList } from './reducers/product-list.reducer';
+import { AppState } from './../shared/models/store.model';
+import { Store } from '@ngrx/store';
 import { CartService } from '../services/cart/cart.service';
 import { ProductService } from 'src/app/services/product/product.service';
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../shared/models/product.model';
 import { BehaviorSubject, Observable, of, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
+import { Cart } from '../shared/models/cart.model';
+import { add } from '../cart/actions/cart.actions';
+import { selectCart } from '../cart/reducers/cart.reducer';
+import { loadProducts } from './actions/product-list.actions';
 
 @Component({
   selector: 'ar-product-list',
@@ -14,13 +22,16 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit() {
+    this.store.dispatch(loadProducts());
+
     this.products$ = combineLatest([
-      this.productService.getProducts$(),
-      this.cartService.getCart$(),
+      this.store.select(selectProductList),
+      this.store.select(selectCart),
     ]).pipe(
       map(([products, cart]) =>
         products.map((product) => ({ product, isInCart: !!cart[product.name] }))
@@ -29,10 +40,12 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(productName: string) {
-    this.cartService.addToCart(productName);
+    //this.cartService.addToCart(productName);
+    this.store.dispatch(add({ productName }));
   }
 
   removeFromCart(productName: string) {
-    this.cartService.removeFromCart(productName);
+    //this.cartService.removeFromCart(productName);
+    this.store.dispatch(remove({ productName }));
   }
 }
