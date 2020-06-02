@@ -1,6 +1,5 @@
 import { Product } from './../../shared/models/product.model';
 import { HttpClient } from '@angular/common/http';
-import { ProductService } from 'src/app/services/product/product.service';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY, of } from 'rxjs';
@@ -17,10 +16,15 @@ export class ProductEffects {
       ofType(this.loadProductsAction),
       mergeMap(() =>
         this.loadProducts().pipe(
-          map(
-            (productList) =>
-              ProductListActions.loadProductsSuccess({ productList }),
-            catchError(() => EMPTY)
+          map((productList) =>
+            ProductListActions.loadProductsSuccess({ productList })
+          ),
+          catchError((err) =>
+            of(
+              ProductListActions.loadProductsFaliure({
+                errorMsg: err.message,
+              })
+            )
           )
         )
       )

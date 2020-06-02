@@ -16,21 +16,21 @@ export class CartService {
   }
 
   addToCart(productName) {
-    let cart: Record<string, number> = this.cart$.getValue();
+    const cart: Record<string, number> = this.cart$.getValue();
     cart[productName] = 1;
 
     this.cart$.next(cart);
   }
 
   removeFromCart(productName: string) {
-    let cart: Record<string, number> = this.cart$.getValue();
+    const cart: Record<string, number> = this.cart$.getValue();
     delete cart[productName];
 
     this.cart$.next(cart);
   }
 
   changeAmount(product: Product, newAmount: number) {
-    let cart: Record<string, number> = this.cart$.getValue();
+    const cart: Record<string, number> = this.cart$.getValue();
     if (!product.limit || newAmount <= product.limit) {
       cart[product.name] = newAmount;
     }

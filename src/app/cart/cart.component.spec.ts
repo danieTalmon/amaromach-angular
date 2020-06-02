@@ -1,16 +1,19 @@
+import { reduceLimits } from './../product-list/actions/product-list.actions';
+import { selectProductList } from './../product-list/reducers/product-list.reducer';
 import { mockProduct } from './../product-list/mock/product-list.mock';
 import { Cart } from './../shared/models/cart.model';
 import { Product } from './../shared/models/product.model';
 import { MatSelectModule } from '@angular/material/select';
 import { CartProductComponent } from './cart-product/cart-product.component';
-import { ProductService } from './../services/product/product.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CartComponent } from './cart.component';
 import { mock, instance, when, verify } from 'ts-mockito';
-import { CartService } from '../services/cart/cart.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { AppState } from '../shared/models/store.model';
+import { selectCart } from './reducers/cart.reducer';
+import { remove, changeAmount, checkout } from './actions/cart.actions';
 
 describe('CartComponent', () => {
   const amount: number = 3;
@@ -19,19 +22,17 @@ describe('CartComponent', () => {
 
   let cartComponent: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
-  const mockCartService: CartService = mock(CartService);
-  when(mockCartService.getCart$()).thenReturn(of(cart));
-  const mockProductService: ProductService = mock(ProductService);
-  when(mockProductService.getProducts$()).thenReturn(of(products));
   const mockMatDialog: MatDialogRef<CartComponent> = mock(MatDialogRef);
+  let mockStore: MockStore<AppState>;
+  let mockCartSelector;
+  let mockProductListSelector;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [CartComponent, CartProductComponent],
       imports: [MatSelectModule],
       providers: [
-        { provide: CartService, useValue: instance(mockCartService) },
-        { provide: ProductService, useValue: instance(mockProductService) },
+        provideMockStore(),
         { provide: MatDialogRef, useValue: instance(mockMatDialog) },
       ],
     }).compileComponents();
@@ -40,6 +41,13 @@ describe('CartComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CartComponent);
     cartComponent = fixture.componentInstance;
+    mockStore = TestBed.get(MockStore);
+    mockCartSelector = mockStore.overrideSelector(selectCart, cart);
+    mockProductListSelector = mockStore.overrideSelector(
+      selectProductList,
+      products
+    );
+    spyOn(mockStore, 'dispatch');
     fixture.detectChanges();
   });
 
@@ -57,15 +65,19 @@ describe('CartComponent', () => {
 
   it('should remove from cart', () => {
     cartComponent.removeFromCart(mockProduct.name);
-
-    verify(mockCartService.removeFromCart(mockProduct.name)).called();
+    expect(mockStore.dispatch).toHaveBeenCalled();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(
+      remove({ productName: mockProduct.name })
+    );
   });
 
   it('should change the amount of the cart product', () => {
     const newAmount: number = 3;
     cartComponent.changeAmount(mockProduct, newAmount);
-
-    verify(mockCartService.changeAmount(mockProduct, newAmount)).called();
+    expect(mockStore.dispatch).toHaveBeenCalled();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(
+      changeAmount({ product: mockProduct, newAmount })
+    );
   });
 
   it('should get the cart total price', (done) => {
@@ -75,11 +87,11 @@ describe('CartComponent', () => {
     });
   });
 
-  it('should checkout', (done) => {
+  it('should checkout', () => {
     cartComponent.checkout();
 
-    verify(mockCartService.checkout()).called();
-    verify(mockProductService.updateProductsLimits(cart)).called();
-    done();
+    expect(mockStore.dispatch).toHaveBeenCalled();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(checkout());
+    expect(mockStore.dispatch).toHaveBeenCalledWith(reduceLimits({ cart }));
   });
 });

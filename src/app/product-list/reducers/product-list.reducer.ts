@@ -6,16 +6,17 @@ import {
   on,
   ActionReducer,
   ActionCreator,
+  Action,
   createFeatureSelector,
   createSelector,
 } from '@ngrx/store';
 import * as ProductListActions from '../actions/product-list.actions';
 
-export const initialState: Product[] = [];
+export const initialState: ProductListState = [];
 
 const productListReducer: ActionReducer<
-  Product[],
-  ActionCreator
+  ProductListState,
+  Action
 > = createReducer(
   initialState,
   on(
@@ -27,22 +28,19 @@ const productListReducer: ActionReducer<
     (productListState) => productListState
   ),
   on(ProductListActions.reduceLimits, (productListState, { cart }) => {
-    productListState
-      .filter((product) => !!cart[product.name])
-      .map((product) => {
-        if (!!cart[product.name]) {
-          return product.limit
-            ? { ...product, limit: product.limit - cart[product.name] }
-            : { ...product };
-        } else {
-          return { ...product };
-        }
-      });
-    return [...productListState];
+    return productListState.map((product) => {
+      if (!!cart[product.name]) {
+        return product.limit
+          ? { ...product, limit: product.limit - cart[product.name] }
+          : { ...product };
+      } else {
+        return { ...product };
+      }
+    });
   })
 );
 
-export const selectFeatureProductList = createFeatureSelector<AppState>(
+export const selectFeatureProductList = createFeatureSelector<ProductListState>(
   'productList'
 );
 
@@ -51,9 +49,15 @@ export const selectProductList = createSelector(
   (state: ProductListState) => state
 );
 
+export const selectProduct = createSelector(
+  selectFeatureProductList,
+  (state: ProductListState, props) =>
+    state.find((product) => product.name === props.id)
+);
+
 export function ProductListReducer(
   state: Product[] | undefined,
-  action: ActionCreator
+  action: Action
 ) {
   return productListReducer(state, action);
 }

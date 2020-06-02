@@ -1,6 +1,6 @@
+import { ProductListState } from './../../shared/models/product.model';
 import { Cart } from './../../shared/models/cart.model';
-import { Product } from 'src/app/shared/models/product.model';
-import { createAction, props, Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 enum productListAction {
   LOAD_PRODUCTS = '[Product] Load Products',
@@ -13,11 +13,12 @@ export const loadProducts = createAction(productListAction.LOAD_PRODUCTS);
 
 export const loadProductsSuccess = createAction(
   productListAction.LOAD_PRODUCTS_SUCCESS,
-  props<{productList: Product[]}>()
+  props<{ productList: ProductListState }>()
 );
 
 export const loadProductsFaliure = createAction(
-  productListAction.LOAD_PRODUCTS_FALIURE
+  productListAction.LOAD_PRODUCTS_FALIURE,
+  props<{ errorMsg: string }>()
 );
 
 export const reduceLimits = createAction(

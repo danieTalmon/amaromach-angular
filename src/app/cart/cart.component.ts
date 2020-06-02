@@ -3,8 +3,6 @@ import { selectProductList } from './../product-list/reducers/product-list.reduc
 import { AppState } from './../shared/models/store.model';
 import { selectCart } from './reducers/cart.reducer';
 import { Cart } from './../shared/models/cart.model';
-import { ProductService } from 'src/app/services/product/product.service';
-import { CartService } from './../services/cart/cart.service';
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../shared/models/product.model';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -24,8 +22,6 @@ export class CartComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<CartComponent>,
-    private cartService: CartService,
-    private productService: ProductService,
     private store: Store<AppState>
   ) {}
 
@@ -46,18 +42,16 @@ export class CartComponent implements OnInit {
   }
 
   removeFromCart(productName: string) {
-    //this.cartService.removeFromCart(productName);
     this.store.dispatch(remove({ productName }));
   }
 
   changeAmount(product: Product, newAmount: number) {
-    //this.cartService.changeAmount(product, newAmount);
     this.store.dispatch(changeAmount({ product, newAmount }));
   }
 
   checkout() {
     this.store
-      .select('cart')
+      .select(selectCart)
       .pipe(take(1))
       .subscribe((cart) => {
         this.store.dispatch(reduceLimits({ cart }));

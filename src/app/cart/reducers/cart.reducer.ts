@@ -4,6 +4,7 @@ import {
   createReducer,
   on,
   ActionReducer,
+  Action,
   ActionCreator,
   createSelector,
   createFeatureSelector,
@@ -12,7 +13,7 @@ import * as CartActions from '../actions/cart.actions';
 
 export const initialState: Cart = {};
 
-const cartReducer: ActionReducer<Cart, ActionCreator> = createReducer(
+const cartReducer: ActionReducer<Cart, Action> = createReducer(
   initialState,
   on(CartActions.add, (cartState, { productName }) => ({
     ...cartState,
@@ -25,18 +26,25 @@ const cartReducer: ActionReducer<Cart, ActionCreator> = createReducer(
   on(CartActions.changeAmount, (cartState, { product, newAmount }) => {
     if (!product.limit || newAmount <= product.limit) {
       return { ...cartState, [product.name]: newAmount };
+    } else {
+      return { ...cartState };
     }
   }),
   on(CartActions.checkout, (cartState) => ({}))
 );
 
-export const selectFeatureCart = createFeatureSelector('cart');
+export const selectFeatureCart = createFeatureSelector<CartState>('cart');
 
 export const selectCart = createSelector(
   selectFeatureCart,
   (state: CartState) => state
 );
 
-export function CartReducer(state: Cart | undefined, action: ActionCreator) {
+export const selectCartLength = createSelector(
+  selectFeatureCart,
+  (cart) => Object.keys(cart).length
+);
+
+export function CartReducer(state: Cart | undefined, action: Action) {
   return cartReducer(state, action);
 }

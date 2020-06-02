@@ -1,9 +1,8 @@
+import { ProductListState } from './../shared/models/product.model';
 import { remove } from './../cart/actions/cart.actions';
 import { selectProductList } from './reducers/product-list.reducer';
 import { AppState } from './../shared/models/store.model';
 import { Store } from '@ngrx/store';
-import { CartService } from '../services/cart/cart.service';
-import { ProductService } from 'src/app/services/product/product.service';
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../shared/models/product.model';
 import { BehaviorSubject, Observable, of, combineLatest } from 'rxjs';
@@ -21,8 +20,6 @@ export class ProductListComponent implements OnInit {
   products$: Observable<{ product: Product; isInCart: boolean }[]>;
 
   constructor(
-    private productService: ProductService,
-    private cartService: CartService,
     private store: Store<AppState>
   ) {}
 
@@ -40,12 +37,10 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(productName: string) {
-    //this.cartService.addToCart(productName);
     this.store.dispatch(add({ productName }));
   }
 
   removeFromCart(productName: string) {
-    //this.cartService.removeFromCart(productName);
     this.store.dispatch(remove({ productName }));
   }
 }
