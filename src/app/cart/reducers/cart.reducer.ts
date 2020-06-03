@@ -1,19 +1,17 @@
-import { AppState } from './../../shared/models/store.model';
-import { Cart, CartState } from './../../shared/models/cart.model';
 import {
-  createReducer,
-  on,
-  ActionReducer,
   Action,
-  ActionCreator,
-  createSelector,
+  ActionReducer,
   createFeatureSelector,
+  createReducer,
+  createSelector,
+  on,
 } from '@ngrx/store';
 import * as CartActions from '../actions/cart.actions';
+import { Cart, CartState } from './../../shared/models/cart.model';
 
 export const initialState: Cart = {};
 
-const cartReducer: ActionReducer<Cart, Action> = createReducer(
+export const cartReducer: ActionReducer<Cart, Action> = createReducer(
   initialState,
   on(CartActions.add, (cartState, { productName }) => ({
     ...cartState,
@@ -44,7 +42,3 @@ export const selectCartLength = createSelector(
   selectFeatureCart,
   (cart) => Object.keys(cart).length
 );
-
-export function CartReducer(state: Cart | undefined, action: Action) {
-  return cartReducer(state, action);
-}

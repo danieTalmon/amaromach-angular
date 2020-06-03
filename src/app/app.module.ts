@@ -9,8 +9,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { CartReducer } from './cart/reducers/cart.reducer';
-import { ProductListReducer } from './product-list/reducers/product-list.reducer';
+import { cartReducer } from './cart/reducers/cart.reducer';
+import { productListReducer } from './product-list/reducers/product-list.reducer';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,7 +22,7 @@ import { ProductListReducer } from './product-list/reducers/product-list.reducer
     SharedModule,
     CartModule,
     ProductListModule,
-    StoreModule.forRoot({ cart: CartReducer, productList: ProductListReducer }),
+    StoreModule.forRoot({ cart: cartReducer, productList: productListReducer }),
     StoreDevtoolsModule.instrument(),
   ],
   providers: [],

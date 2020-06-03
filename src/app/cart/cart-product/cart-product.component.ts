@@ -1,11 +1,10 @@
-import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Product } from '../../shared/models/product.model';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'ar-cart-product',
   templateUrl: './cart-product.component.html',
-  styleUrls: ['./cart-product.component.less']
+  styleUrls: ['./cart-product.component.less'],
 })
 export class CartProductComponent implements OnInit {
   @Input()
@@ -23,7 +22,7 @@ export class CartProductComponent implements OnInit {
   constructor() {
     this.changeAmount = new EventEmitter<number>();
     this.remove = new EventEmitter<void>();
-   }
+  }
 
   ngOnInit() {
     this.amount = this.amount || 1;
@@ -34,7 +33,7 @@ export class CartProductComponent implements OnInit {
   }
 
   changeProductAmount(productAmount: number) {
-     this.changeAmount.emit(productAmount);
+    this.changeAmount.emit(productAmount);
   }
 
   removeFromCart() {
@@ -42,6 +41,6 @@ export class CartProductComponent implements OnInit {
   }
 
   private numbersArray() {
-    return [...Array(this.product.limit).keys()].map(x => ++x);
+    return [...Array(this.product.limit).keys()].map((x) => ++x);
   }
 }

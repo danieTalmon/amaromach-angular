@@ -1,12 +1,12 @@
-import { selectProduct } from './../reducers/product-list.reducer';
-import { Store } from '@ngrx/store';
-import { ProductService } from 'src/app/services/product/product.service';
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../shared/models/product.model';
 import { ActivatedRoute, Params } from '@angular/router';
-import { mergeMap, map, switchMap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AppState } from 'src/app/shared/models/store.model';
+import { Product } from '../../shared/models/product.model';
+import { getProduct } from '../actions/product-list.actions';
+import { selectProduct } from './../reducers/product-list.reducer';
 
 @Component({
   selector: 'ar-product-info',
@@ -19,10 +19,9 @@ export class ProductInfoComponent implements OnInit {
   constructor(private route: ActivatedRoute, private store: Store<AppState>) {}
 
   ngOnInit() {
-    this.product$ = this.route.params.pipe(
-      switchMap((parameter: Params) =>
-        this.store.select(selectProduct, { id: parameter.id })
-      )
-    );
+    this.route.params.pipe(take(1)).subscribe((parameter: Params) => {
+      this.store.dispatch(getProduct({ productName: parameter.id }));
+      this.product$ = this.store.select(selectProduct);
+    });
   }
 }

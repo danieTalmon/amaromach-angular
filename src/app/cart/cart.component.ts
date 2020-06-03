@@ -1,15 +1,14 @@
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { combineLatest, Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { Product } from '../shared/models/product.model';
 import { reduceLimits } from './../product-list/actions/product-list.actions';
 import { selectProductList } from './../product-list/reducers/product-list.reducer';
 import { AppState } from './../shared/models/store.model';
+import { changeAmount, checkout, remove } from './actions/cart.actions';
 import { selectCart } from './reducers/cart.reducer';
-import { Cart } from './../shared/models/cart.model';
-import { Component, OnInit } from '@angular/core';
-import { Product } from '../shared/models/product.model';
-import { MatDialogRef } from '@angular/material/dialog';
-import { combineLatest, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { Store, select } from '@ngrx/store';
-import { remove, changeAmount, checkout } from './actions/cart.actions';
 
 @Component({
   selector: 'ar-cart',

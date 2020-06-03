@@ -1,11 +1,11 @@
-import { StoreModule } from '@ngrx/store';
-import { RouterModule } from '@angular/router';
-import { NavbarComponent } from './navbar/navbar.component';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
+import { RouterModule } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
 import { CartModule } from '../cart/cart.module';
-import { CartReducer } from '../cart/reducers/cart.reducer';
+import { cartReducer } from '../cart/reducers/cart.reducer';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [NavbarComponent],
@@ -14,7 +14,7 @@ import { CartReducer } from '../cart/reducers/cart.reducer';
     CartModule,
     RouterModule,
     MatMenuModule,
-    StoreModule.forRoot({ cart: CartReducer }),
+    StoreModule.forRoot({ cart: cartReducer }),
   ],
   exports: [NavbarComponent],
 })

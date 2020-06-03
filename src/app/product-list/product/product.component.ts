@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Product } from '../../shared/models/product.model';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Product } from '../../shared/models/product.model';
 
 @Component({
   selector: 'ar-product',

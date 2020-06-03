@@ -1,13 +1,13 @@
-import { CartState } from './../../shared/models/cart.model';
-import { CartReducer } from './cart.reducer';
-import * as cartActions from '../actions/cart.actions';
 import { productsMock } from 'src/app/product-list/mock/product-list.mock';
+import * as cartActions from '../actions/cart.actions';
+import { CartState } from './../../shared/models/cart.model';
+import { cartReducer } from './cart.reducer';
 describe('Reducer: cart', () => {
   const productName: string = productsMock[0].name;
-  const state = CartReducer({}, cartActions.add({ productName }));
+  const state = cartReducer({}, cartActions.add({ productName }));
 
   it('should add a product to the cart', () => {
-    const newState: CartState = CartReducer(
+    const newState: CartState = cartReducer(
       state,
       cartActions.add({ productName: productsMock[1].name })
     );
@@ -16,7 +16,7 @@ describe('Reducer: cart', () => {
   });
 
   it('should remove a product from the cart', () => {
-    const newState: CartState = CartReducer(
+    const newState: CartState = cartReducer(
       state,
       cartActions.remove({ productName: productsMock[0].name })
     );
@@ -26,7 +26,7 @@ describe('Reducer: cart', () => {
 
   it('should change amount of a cart product', () => {
     const newAmount: number = productsMock[0].limit - 1;
-    const newState: CartState = CartReducer(
+    const newState: CartState = cartReducer(
       state,
       cartActions.changeAmount({ product: productsMock[0], newAmount })
     );
@@ -35,7 +35,7 @@ describe('Reducer: cart', () => {
 
   it('should not change amount of a cart product', () => {
     const newAmount: number = productsMock[0].limit + 1;
-    const newState: CartState = CartReducer(
+    const newState: CartState = cartReducer(
       state,
       cartActions.changeAmount({ product: productsMock[0], newAmount })
     );
@@ -43,7 +43,7 @@ describe('Reducer: cart', () => {
   });
 
   it('should checkout', () => {
-    const newState: CartState = CartReducer(state, cartActions.checkout());
+    const newState: CartState = cartReducer(state, cartActions.checkout());
     expect(newState).toEqual({});
   });
 });

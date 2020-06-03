@@ -10,7 +10,9 @@ module.exports = {
   testMatch: [
     "<rootDir>/src/app/product-list/product/product.component.spec.ts",
     "<rootDir>/src/app/cart/cart.component.spec.ts",
-    '**/**.reducer.spec.ts'
+    '**/**.reducer.spec.ts',
+    '**/**.effects.spec.ts',
+    '**/product.service.spec.ts'
   ],
   globals: {
     "ts-jest": {

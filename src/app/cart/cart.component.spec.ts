@@ -1,19 +1,18 @@
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { instance, mock } from 'ts-mockito';
+import { AppState } from '../shared/models/store.model';
 import { reduceLimits } from './../product-list/actions/product-list.actions';
-import { selectProductList } from './../product-list/reducers/product-list.reducer';
 import { mockProduct } from './../product-list/mock/product-list.mock';
+import { selectProductList } from './../product-list/reducers/product-list.reducer';
 import { Cart } from './../shared/models/cart.model';
 import { Product } from './../shared/models/product.model';
-import { MatSelectModule } from '@angular/material/select';
+import { changeAmount, checkout, remove } from './actions/cart.actions';
 import { CartProductComponent } from './cart-product/cart-product.component';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CartComponent } from './cart.component';
-import { mock, instance, when, verify } from 'ts-mockito';
-import { MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { AppState } from '../shared/models/store.model';
 import { selectCart } from './reducers/cart.reducer';
-import { remove, changeAmount, checkout } from './actions/cart.actions';
 
 describe('CartComponent', () => {
   const amount: number = 3;

@@ -5,4 +5,7 @@ export interface Product {
   limit?: number;
 }
 
-export type ProductListState = Product[];
+export interface ProductListState {
+  productList: Product[];
+  selectedProduct: Product | null;
+}

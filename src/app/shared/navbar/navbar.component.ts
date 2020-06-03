@@ -1,11 +1,11 @@
-import { Store } from '@ngrx/store';
-import { AppState } from './../models/store.model';
-import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { CartComponent } from 'src/app/cart/cart.component';
 import { selectCartLength } from 'src/app/cart/reducers/cart.reducer';
+import { AppState } from './../models/store.model';
 
 @Component({
   selector: 'ar-navbar',

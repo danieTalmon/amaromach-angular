@@ -1,5 +1,5 @@
+import { createAction, props } from '@ngrx/store';
 import { Product } from 'src/app/shared/models/product.model';
-import { createAction, props, ActionCreator } from '@ngrx/store';
 
 enum cartAction {
   ADD = '[CART] Add',
