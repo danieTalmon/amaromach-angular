@@ -23,7 +23,7 @@ import {
 })
 export class ProductInfoComponent implements OnInit, OnDestroy {
   product$: Observable<Product>;
-  destroy$: Subject<boolean>;
+  destroy$: Subject<void>;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,7 +31,7 @@ export class ProductInfoComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.destroy$ = new Subject<boolean>();
+    this.destroy$ = new Subject<void>();
     this.route.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((parameter: Params) => {
@@ -41,7 +41,6 @@ export class ProductInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    this.destroy$.next();
   }
 }
