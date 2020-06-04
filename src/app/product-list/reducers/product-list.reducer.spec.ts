@@ -19,7 +19,7 @@ describe('Reducer: cart', () => {
     expect(newState).toEqual({ ...initialState, productList: productsMock });
   });
 
-  it('should failure load products', () => {
+  it('should fail load products', () => {
     const newState: ProductListState = productListReducer(
       initialState,
       productListActions.loadProductsFaliure({ errorMsg })
