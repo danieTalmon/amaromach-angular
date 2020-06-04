@@ -56,11 +56,9 @@ export const productListReducer: ActionReducer<
 
 const reduceLimits = (productsList: Product[], cart: CartState) => {
   return productsList.map((product) => {
-    if (!!cart[product.name] && product.limit) {
-      return { ...product, limit: product.limit - cart[product.name] };
-    } else {
-      return { ...product };
-    }
+    return !!cart[product.name] && product.limit
+      ? { ...product, limit: product.limit - cart[product.name] }
+      : { ...product };
   });
 };
 
