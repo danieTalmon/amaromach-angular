@@ -7,7 +7,7 @@ import { StoreModule } from '@ngrx/store';
 import { productListReducer } from '../product-list/reducers/product-list.reducer';
 import { CartProductComponent } from './cart-product/cart-product.component';
 import { CartComponent } from './cart.component';
-import { cartReducer, cartStsteToken } from './reducers/cart.reducer';
+import { cartReducer, cartStateToken } from './reducers/cart.reducer';
 
 @NgModule({
   declarations: [CartComponent, CartProductComponent],
@@ -17,7 +17,7 @@ import { cartReducer, cartStsteToken } from './reducers/cart.reducer';
     ReactiveFormsModule,
     MatDialogModule,
     MatSelectModule,
-    StoreModule.forFeature(cartStsteToken, cartReducer),
+    StoreModule.forFeature(cartStateToken, cartReducer),
   ],
   providers: [],
 })

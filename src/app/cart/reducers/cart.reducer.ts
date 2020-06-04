@@ -10,7 +10,7 @@ import * as CartActions from '../actions/cart.actions';
 import { Cart } from './../../shared/models/cart.model';
 
 export type CartState = Cart;
-export const cartStsteToken = 'cart';
+export const cartStateToken = 'cart';
 
 export const initialState: Cart = {};
 
@@ -35,7 +35,7 @@ export const cartReducer: ActionReducer<Cart, Action> = createReducer(
   on(CartActions.checkout, (cartState, { cart }) => ({}))
 );
 
-export const getFeatureCart = createFeatureSelector<CartState>(cartStsteToken);
+export const getFeatureCart = createFeatureSelector<CartState>(cartStateToken);
 
 export const getCart = createSelector(
   getFeatureCart,
