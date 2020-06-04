@@ -1,11 +1,11 @@
+import { CartState } from './../../cart/reducers/cart.reducer';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CartComponent } from 'src/app/cart/cart.component';
-import { selectCartLength } from 'src/app/cart/reducers/cart.reducer';
-import { AppState } from './../models/store.model';
+import { getCartLength } from 'src/app/cart/reducers/cart.reducer';
 
 @Component({
   selector: 'ar-navbar',
@@ -19,11 +19,11 @@ export class NavbarComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
-    private store: Store<AppState>
+    private store: Store<CartState>
   ) {}
 
   ngOnInit() {
-    this.totalProducts$ = this.store.select(selectCartLength);
+    this.totalProducts$ = this.store.select(getCartLength);
   }
 
   openCart() {

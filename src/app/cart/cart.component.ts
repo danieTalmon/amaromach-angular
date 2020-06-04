@@ -5,10 +5,12 @@ import { combineLatest, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Product } from '../shared/models/product.model';
 import { reduceLimits } from './../product-list/actions/product-list.actions';
-import { selectProductList } from './../product-list/reducers/product-list.reducer';
-import { AppState } from './../shared/models/store.model';
-import { changeAmount, checkout, remove } from './actions/cart.actions';
-import { selectCart } from './reducers/cart.reducer';
+import {
+  getProductList,
+  ProductListState,
+} from './../product-list/reducers/product-list.reducer';
+import { changeAmount, checkout, removeProduct } from './actions/cart.actions';
+import { getCart, CartState } from './reducers/cart.reducer';
 
 @Component({
   selector: 'ar-cart',
@@ -21,13 +23,13 @@ export class CartComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<CartComponent>,
-    private store: Store<AppState>
+    private store: Store<CartState | ProductListState>
   ) {}
 
   ngOnInit() {
     this.cartProducts$ = combineLatest([
-      this.store.select(selectProductList),
-      this.store.select(selectCart),
+      this.store.select(getProductList),
+      this.store.select(getCart),
     ]).pipe(
       map(([products, cart]) =>
         Object.keys(cart).map((cartProductName) => ({
@@ -41,7 +43,7 @@ export class CartComponent implements OnInit {
   }
 
   removeFromCart(productName: string) {
-    this.store.dispatch(remove({ productName }));
+    this.store.dispatch(removeProduct({ productName }));
   }
 
   changeAmount(product: Product, newAmount: number) {
@@ -50,11 +52,10 @@ export class CartComponent implements OnInit {
 
   checkout() {
     this.store
-      .select(selectCart)
+      .select(getCart)
       .pipe(take(1))
       .subscribe((cart) => {
-        this.store.dispatch(reduceLimits({ cart }));
-        this.store.dispatch(checkout());
+        this.store.dispatch(checkout({ cart }));
       });
   }
 

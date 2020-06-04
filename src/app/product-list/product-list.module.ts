@@ -11,7 +11,10 @@ import { ProductEffects } from './effects/product-list.effects';
 import { ProductInfoComponent } from './product-info/product-info.component';
 import { ProductListComponent } from './product-list.component';
 import { ProductComponent } from './product/product.component';
-import { productListReducer } from './reducers/product-list.reducer';
+import {
+  productListReducer,
+  productListToken,
+} from './reducers/product-list.reducer';
 
 @NgModule({
   declarations: [ProductComponent, ProductListComponent, ProductInfoComponent],
@@ -20,8 +23,8 @@ import { productListReducer } from './reducers/product-list.reducer';
     RouterModule,
     SharedModule,
     CartModule,
-    StoreModule.forRoot({ productList: productListReducer, cart: cartReducer }),
-    EffectsModule.forRoot([ProductEffects]),
+    EffectsModule.forFeature([ProductEffects]),
+    StoreModule.forFeature(productListToken, productListReducer),
   ],
   exports: [ProductListComponent, ProductComponent, ProductInfoComponent],
   providers: [ProductService],

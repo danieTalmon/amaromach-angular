@@ -4,8 +4,3 @@ export interface Product {
   price: number;
   limit?: number;
 }
-
-export interface ProductListState {
-  productList: Product[];
-  selectedProduct: Product | null;
-}

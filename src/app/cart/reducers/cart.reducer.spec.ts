@@ -1,15 +1,17 @@
 import { productsMock } from 'src/app/product-list/mock/product-list.mock';
 import * as cartActions from '../actions/cart.actions';
-import { CartState } from './../../shared/models/cart.model';
-import { cartReducer } from './cart.reducer';
+import { cartReducer, CartState, initialState } from './cart.reducer';
 describe('Reducer: cart', () => {
   const productName: string = productsMock[0].name;
-  const state = cartReducer({}, cartActions.add({ productName }));
+  const state: CartState = cartReducer(
+    initialState,
+    cartActions.addProduct({ productName })
+  );
 
   it('should add a product to the cart', () => {
     const newState: CartState = cartReducer(
       state,
-      cartActions.add({ productName: productsMock[1].name })
+      cartActions.addProduct({ productName: productsMock[1].name })
     );
     expect(newState[productsMock[1].name]).toEqual(1);
     expect(Object.keys(newState).length).toEqual(2);
@@ -18,13 +20,13 @@ describe('Reducer: cart', () => {
   it('should remove a product from the cart', () => {
     const newState: CartState = cartReducer(
       state,
-      cartActions.remove({ productName: productsMock[0].name })
+      cartActions.removeProduct({ productName: productsMock[0].name })
     );
     expect(newState[productsMock[1].name]).toEqual(undefined);
     expect(Object.keys(newState).length).toEqual(0);
   });
 
-  it('should change amount of a cart product', () => {
+  it("should change amount of a cart's product", () => {
     const newAmount: number = productsMock[0].limit - 1;
     const newState: CartState = cartReducer(
       state,
@@ -33,7 +35,7 @@ describe('Reducer: cart', () => {
     expect(newState[productsMock[0].name]).toEqual(newAmount);
   });
 
-  it('should not change amount of a cart product', () => {
+  it("should not change amount of a cart's product", () => {
     const newAmount: number = productsMock[0].limit + 1;
     const newState: CartState = cartReducer(
       state,
@@ -43,7 +45,10 @@ describe('Reducer: cart', () => {
   });
 
   it('should checkout', () => {
-    const newState: CartState = cartReducer(state, cartActions.checkout());
+    const newState: CartState = cartReducer(
+      state,
+      cartActions.checkout({ cart: state })
+    );
     expect(newState).toEqual({});
   });
 });

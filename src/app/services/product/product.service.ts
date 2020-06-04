@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Product } from 'src/app/shared/models/product.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ProductService {
   private readonly productURL: string = 'assets/products.json';
 

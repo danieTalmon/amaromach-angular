@@ -8,8 +8,13 @@ import {
 } from '@ngrx/store';
 import { Product } from 'src/app/shared/models/product.model';
 import * as ProductListActions from '../actions/product-list.actions';
-import { CartState } from './../../shared/models/cart.model';
-import { ProductListState } from './../../shared/models/product.model';
+import { CartState } from './../../cart/reducers/cart.reducer';
+
+export interface ProductListState {
+  productList: Product[];
+  selectedProduct: Product | null;
+}
+export const productListToken = 'productList';
 
 export const initialState: ProductListState = {
   productList: [],
@@ -32,11 +37,14 @@ export const productListReducer: ActionReducer<
     ProductListActions.loadProductsFaliure,
     (productListState) => productListState
   ),
-  on(ProductListActions.getProductSuccess, (productListState, { product }) => ({
-    ...productListState,
-    selectedProduct: product,
-  })),
-  on(ProductListActions.getProductFaliure, (productListState) => ({
+  on(
+    ProductListActions.loadProductSuccess,
+    (productListState, { product }) => ({
+      ...productListState,
+      selectedProduct: product,
+    })
+  ),
+  on(ProductListActions.loadProductFaliure, (productListState) => ({
     ...productListState,
     selectedProduct: null,
   })),
@@ -48,26 +56,24 @@ export const productListReducer: ActionReducer<
 
 const reduceLimits = (productsList: Product[], cart: CartState) => {
   return productsList.map((product) => {
-    if (!!cart[product.name]) {
-      return product.limit
-        ? { ...product, limit: product.limit - cart[product.name] }
-        : { ...product };
+    if (!!cart[product.name] && product.limit) {
+      return { ...product, limit: product.limit - cart[product.name] };
     } else {
       return { ...product };
     }
   });
 };
 
-export const selectFeatureProductList = createFeatureSelector<ProductListState>(
-  'productList'
+export const getFeatureProductList = createFeatureSelector<ProductListState>(
+  productListToken
 );
 
-export const selectProductList = createSelector(
-  selectFeatureProductList,
+export const getProductList = createSelector(
+  getFeatureProductList,
   (state: ProductListState) => state.productList
 );
 
-export const selectProduct = createSelector(
-  selectFeatureProductList,
+export const getProduct = createSelector(
+  getFeatureProductList,
   (state: ProductListState) => state.selectedProduct
 );

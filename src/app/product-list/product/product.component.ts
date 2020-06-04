@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../shared/models/product.model';
 
@@ -6,6 +13,7 @@ import { Product } from '../../shared/models/product.model';
   selector: 'ar-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductComponent implements OnInit {
   @Input()

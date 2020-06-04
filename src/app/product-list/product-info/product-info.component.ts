@@ -1,27 +1,47 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { AppState } from 'src/app/shared/models/store.model';
+import { Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { Product } from '../../shared/models/product.model';
-import { getProduct } from '../actions/product-list.actions';
-import { selectProduct } from './../reducers/product-list.reducer';
+import { loadProduct as getProductAction } from '../actions/product-list.actions';
+import {
+  getProduct,
+  ProductListState,
+} from './../reducers/product-list.reducer';
 
 @Component({
   selector: 'ar-product-info',
   templateUrl: './product-info.component.html',
   styleUrls: ['./product-info.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductInfoComponent implements OnInit {
+export class ProductInfoComponent implements OnInit, OnDestroy {
   product$: Observable<Product>;
+  destroy$: Subject<boolean>;
 
-  constructor(private route: ActivatedRoute, private store: Store<AppState>) {}
+  constructor(
+    private route: ActivatedRoute,
+    private store: Store<ProductListState>
+  ) {}
 
   ngOnInit() {
-    this.route.params.pipe(take(1)).subscribe((parameter: Params) => {
-      this.store.dispatch(getProduct({ productName: parameter.id }));
-      this.product$ = this.store.select(selectProduct);
-    });
+    this.destroy$ = new Subject<boolean>();
+    this.route.params
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((parameter: Params) => {
+        this.store.dispatch(getProductAction({ productName: parameter.id }));
+      });
+    this.product$ = this.store.select(getProduct);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

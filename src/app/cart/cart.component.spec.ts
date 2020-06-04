@@ -3,16 +3,18 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { instance, mock } from 'ts-mockito';
-import { AppState } from '../shared/models/store.model';
-import { reduceLimits } from './../product-list/actions/product-list.actions';
+
 import { mockProduct } from './../product-list/mock/product-list.mock';
-import { selectProductList } from './../product-list/reducers/product-list.reducer';
+import {
+  getProductList,
+  ProductListState,
+} from './../product-list/reducers/product-list.reducer';
 import { Cart } from './../shared/models/cart.model';
 import { Product } from './../shared/models/product.model';
-import { changeAmount, checkout, remove } from './actions/cart.actions';
+import { changeAmount, checkout, removeProduct } from './actions/cart.actions';
 import { CartProductComponent } from './cart-product/cart-product.component';
 import { CartComponent } from './cart.component';
-import { selectCart } from './reducers/cart.reducer';
+import { CartState, getCart } from './reducers/cart.reducer';
 
 describe('CartComponent', () => {
   const amount: number = 3;
@@ -22,7 +24,7 @@ describe('CartComponent', () => {
   let cartComponent: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
   const mockMatDialog: MatDialogRef<CartComponent> = mock(MatDialogRef);
-  let mockStore: MockStore<AppState>;
+  let mockStore: MockStore<CartState | ProductListState>;
   let mockCartSelector;
   let mockProductListSelector;
 
@@ -41,9 +43,9 @@ describe('CartComponent', () => {
     fixture = TestBed.createComponent(CartComponent);
     cartComponent = fixture.componentInstance;
     mockStore = TestBed.get(MockStore);
-    mockCartSelector = mockStore.overrideSelector(selectCart, cart);
+    mockCartSelector = mockStore.overrideSelector(getCart, cart);
     mockProductListSelector = mockStore.overrideSelector(
-      selectProductList,
+      getProductList,
       products
     );
     spyOn(mockStore, 'dispatch');
@@ -64,16 +66,16 @@ describe('CartComponent', () => {
 
   it('should remove from cart', () => {
     cartComponent.removeFromCart(mockProduct.name);
-    expect(mockStore.dispatch).toHaveBeenCalled();
+
     expect(mockStore.dispatch).toHaveBeenCalledWith(
-      remove({ productName: mockProduct.name })
+      removeProduct({ productName: mockProduct.name })
     );
   });
 
   it('should change the amount of the cart product', () => {
     const newAmount: number = 3;
     cartComponent.changeAmount(mockProduct, newAmount);
-    expect(mockStore.dispatch).toHaveBeenCalled();
+
     expect(mockStore.dispatch).toHaveBeenCalledWith(
       changeAmount({ product: mockProduct, newAmount })
     );
@@ -89,8 +91,6 @@ describe('CartComponent', () => {
   it('should checkout', () => {
     cartComponent.checkout();
 
-    expect(mockStore.dispatch).toHaveBeenCalled();
-    expect(mockStore.dispatch).toHaveBeenCalledWith(checkout());
-    expect(mockStore.dispatch).toHaveBeenCalledWith(reduceLimits({ cart }));
+    expect(mockStore.dispatch).toHaveBeenCalledWith(checkout({ cart }));
   });
 });

@@ -1,14 +1,17 @@
+import { CartState } from './../cart/reducers/cart.reducer';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { add } from '../cart/actions/cart.actions';
-import { selectCart } from '../cart/reducers/cart.reducer';
+import { addProduct } from '../cart/actions/cart.actions';
+import { getCart } from '../cart/reducers/cart.reducer';
 import { Product } from '../shared/models/product.model';
-import { remove } from './../cart/actions/cart.actions';
-import { AppState } from './../shared/models/store.model';
+import { removeProduct } from './../cart/actions/cart.actions';
 import { loadProducts } from './actions/product-list.actions';
-import { selectProductList } from './reducers/product-list.reducer';
+import {
+  getProductList,
+  ProductListState,
+} from './reducers/product-list.reducer';
 
 @Component({
   selector: 'ar-product-list',
@@ -17,14 +20,12 @@ import { selectProductList } from './reducers/product-list.reducer';
 export class ProductListComponent implements OnInit {
   products$: Observable<{ product: Product; isInCart: boolean }[]>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<CartState | ProductListState>) {}
 
   ngOnInit() {
-    this.store.dispatch(loadProducts());
-
     this.products$ = combineLatest([
-      this.store.select(selectProductList),
-      this.store.select(selectCart),
+      this.store.select(getProductList),
+      this.store.select(getCart),
     ]).pipe(
       map(([products, cart]) =>
         products.map((product) => ({ product, isInCart: !!cart[product.name] }))
@@ -33,10 +34,10 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(productName: string) {
-    this.store.dispatch(add({ productName }));
+    this.store.dispatch(addProduct({ productName }));
   }
 
   removeFromCart(productName: string) {
-    this.store.dispatch(remove({ productName }));
+    this.store.dispatch(removeProduct({ productName }));
   }
 }

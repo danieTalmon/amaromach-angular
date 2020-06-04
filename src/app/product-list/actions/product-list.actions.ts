@@ -24,17 +24,17 @@ export const loadProductsFaliure = createAction(
   props<{ errorMsg: string }>()
 );
 
-export const getProduct = createAction(
+export const loadProduct = createAction(
   productListActions.GET_PRODUCT,
   props<{ productName: string }>()
 );
 
-export const getProductSuccess = createAction(
+export const loadProductSuccess = createAction(
   productListActions.GET_PRODUCT_SUCCESS,
   props<{ product: Product }>()
 );
 
-export const getProductFaliure = createAction(
+export const loadProductFaliure = createAction(
   productListActions.GET_PRODUCT_FALIURE,
   props<{ errorMsg: string }>()
 );

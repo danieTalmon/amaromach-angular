@@ -1,14 +1,14 @@
+import { CartState } from './../../cart/reducers/cart.reducer';
 import { productsMock } from 'src/app/product-list/mock/product-list.mock';
 import * as productListActions from '../actions/product-list.actions';
-import { CartState } from './../../shared/models/cart.model';
-import { Product, ProductListState } from './../../shared/models/product.model';
-import { productListReducer } from './product-list.reducer';
+import { Product } from './../../shared/models/product.model';
+import {
+  productListReducer,
+  ProductListState,
+  initialState,
+} from './product-list.reducer';
 describe('Reducer: cart', () => {
   const productName: string = productsMock[0].name;
-  const initialState: ProductListState = {
-    productList: [],
-    selectedProduct: null,
-  };
   const errorMsg: string = 'unable to load the products';
 
   it('should success load products', () => {
@@ -24,14 +24,14 @@ describe('Reducer: cart', () => {
       initialState,
       productListActions.loadProductsFaliure({ errorMsg })
     );
-    expect(newState).toEqual({ ...initialState });
+    expect(newState).toEqual(initialState);
   });
 
   it('should success get product', () => {
     const product: Product = productsMock[0];
     const newState: ProductListState = productListReducer(
       initialState,
-      productListActions.getProductSuccess({ product })
+      productListActions.loadProductSuccess({ product })
     );
     expect(newState).toEqual({ ...initialState, selectedProduct: product });
   });
@@ -39,15 +39,15 @@ describe('Reducer: cart', () => {
   it('should failure get product', () => {
     const newState: ProductListState = productListReducer(
       initialState,
-      productListActions.getProductFaliure({ errorMsg })
+      productListActions.loadProductFaliure({ errorMsg })
     );
-    expect(newState).toEqual({ ...initialState });
+    expect(newState).toEqual(initialState);
   });
 
   it('should reduce product limit', () => {
     const fakeCart: CartState = {
-      [productsMock[1].name]: 5,
-      [productsMock[3].name]: 10,
+      [productsMock[1].name]: productsMock[1].limit + 5,
+      [productsMock[3].name]: productsMock[1].limit + 10,
     };
     const newState: ProductListState = productListReducer(
       { productList: productsMock, selectedProduct: null },

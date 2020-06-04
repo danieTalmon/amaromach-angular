@@ -1,22 +1,31 @@
+import { productListActions } from './../actions/product-list.actions';
+import { createAction } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { ROOT_EFFECTS_INIT } from '@ngrx/effects';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { checkout } from 'src/app/cart/actions/cart.actions';
 import { ProductService } from 'src/app/services/product/product.service';
+
 import * as ProductListActions from '../actions/product-list.actions';
-import { Product } from './../../shared/models/product.model';
 
 @Injectable()
-export class ProductEffects {
-  readonly GET_PRODUCT = '[Product] Get Product';
-  readonly LOAD_PRODUCTS = '[Product] Load Products';
+export class ProductEffects implements OnInitEffects {
   private readonly productURL: string = 'assets/products.json';
+
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private productService: ProductService
+  ) {}
 
   loadProducts$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(this.LOAD_PRODUCTS),
-      mergeMap(() =>
+      ofType(ProductListActions.loadProducts),
+      switchMap(() =>
         this.productService.getProducts$().pipe(
           map((productList) =>
             ProductListActions.loadProductsSuccess({ productList })
@@ -35,13 +44,13 @@ export class ProductEffects {
 
   getProduct$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(this.GET_PRODUCT),
-      mergeMap(({ productName }) =>
+      ofType(ProductListActions.loadProduct),
+      switchMap(({ productName }) =>
         this.productService.getProduct$(productName).pipe(
-          map((product) => ProductListActions.getProductSuccess({ product })),
+          map((product) => ProductListActions.loadProductSuccess({ product })),
           catchError((err) =>
             of(
-              ProductListActions.getProductFaliure({
+              ProductListActions.loadProductFaliure({
                 errorMsg: err.message,
               })
             )
@@ -51,13 +60,14 @@ export class ProductEffects {
     )
   );
 
-  private loadProducts() {
-    return this.http.get<Product[]>(this.productURL);
-  }
+  reduceLimits$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(checkout),
+      map(({ cart }) => ProductListActions.reduceLimits({ cart }))
+    )
+  );
 
-  constructor(
-    private actions$: Actions,
-    private http: HttpClient,
-    private productService: ProductService
-  ) {}
+  ngrxOnInitEffects(): Action {
+    return ProductListActions.loadProducts();
+  }
 }

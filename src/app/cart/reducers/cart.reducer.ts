@@ -7,38 +7,42 @@ import {
   on,
 } from '@ngrx/store';
 import * as CartActions from '../actions/cart.actions';
-import { Cart, CartState } from './../../shared/models/cart.model';
+import { Cart } from './../../shared/models/cart.model';
+
+export type CartState = Cart;
+export const cartStsteToken = 'cart';
 
 export const initialState: Cart = {};
 
 export const cartReducer: ActionReducer<Cart, Action> = createReducer(
   initialState,
-  on(CartActions.add, (cartState, { productName }) => ({
+  on(CartActions.addProduct, (cartState, { productName }) => ({
     ...cartState,
     [productName]: 1,
   })),
-  on(CartActions.remove, (cartState, { productName }) => {
-    const { [productName]: deleted, ...newCartState } = cartState;
+  on(CartActions.removeProduct, (cartState, { productName }) => {
+    const newCartState: CartState = { ...cartState };
+    delete newCartState[productName];
     return newCartState;
   }),
   on(CartActions.changeAmount, (cartState, { product, newAmount }) => {
     if (!product.limit || newAmount <= product.limit) {
       return { ...cartState, [product.name]: newAmount };
     } else {
-      return { ...cartState };
+      return cartState;
     }
   }),
-  on(CartActions.checkout, (cartState) => ({}))
+  on(CartActions.checkout, (cartState, { cart }) => ({}))
 );
 
-export const selectFeatureCart = createFeatureSelector<CartState>('cart');
+export const getFeatureCart = createFeatureSelector<CartState>(cartStsteToken);
 
-export const selectCart = createSelector(
-  selectFeatureCart,
+export const getCart = createSelector(
+  getFeatureCart,
   (state: CartState) => state
 );
 
-export const selectCartLength = createSelector(
-  selectFeatureCart,
+export const getCartLength = createSelector(
+  getFeatureCart,
   (cart) => Object.keys(cart).length
 );

@@ -1,19 +1,20 @@
+import { Cart } from './../../shared/models/cart.model';
 import { createAction, props } from '@ngrx/store';
 import { Product } from 'src/app/shared/models/product.model';
 
 enum cartAction {
-  ADD = '[CART] Add',
-  REMOVE = '[Cart] Remove',
+  ADD_PRODUCT = '[Cart] Add Product',
+  REMOVE = '[Cart] Remove Product',
   CHANGE_AMOUNT = '[Cart] Change Amount',
   CHECKOUT = '[Cart] Checkout',
 }
 
-export const add = createAction(
-  cartAction.ADD,
+export const addProduct = createAction(
+  cartAction.ADD_PRODUCT,
   props<{ productName: string }>()
 );
 
-export const remove = createAction(
+export const removeProduct = createAction(
   cartAction.REMOVE,
   props<{ productName: string }>()
 );
@@ -23,4 +24,7 @@ export const changeAmount = createAction(
   props<{ product: Product; newAmount: number }>()
 );
 
-export const checkout = createAction(cartAction.CHECKOUT);
+export const checkout = createAction(
+  cartAction.CHECKOUT,
+  props<{ cart: Cart }>()
+);

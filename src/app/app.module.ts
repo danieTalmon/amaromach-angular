@@ -1,3 +1,4 @@
+import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
 import { SharedModule } from './shared/shared.module';
@@ -22,7 +23,8 @@ import { productListReducer } from './product-list/reducers/product-list.reducer
     SharedModule,
     CartModule,
     ProductListModule,
-    StoreModule.forRoot({ cart: cartReducer, productList: productListReducer }),
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument(),
   ],
   providers: [],

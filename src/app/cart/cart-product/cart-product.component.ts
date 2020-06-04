@@ -1,10 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Product } from '../../shared/models/product.model';
 
 @Component({
   selector: 'ar-cart-product',
   templateUrl: './cart-product.component.html',
   styleUrls: ['./cart-product.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartProductComponent implements OnInit {
   @Input()
