@@ -4,7 +4,7 @@ import { Product } from 'src/app/shared/models/product.model';
 
 enum cartAction {
   ADD_PRODUCT = '[Cart] Add Product',
-  REMOVE = '[Cart] Remove Product',
+  REMOVE_PRODUCT = '[Cart] Remove Product',
   CHANGE_AMOUNT = '[Cart] Change Amount',
   CHECKOUT = '[Cart] Checkout',
 }
@@ -15,7 +15,7 @@ export const addProduct = createAction(
 );
 
 export const removeProduct = createAction(
-  cartAction.REMOVE,
+  cartAction.REMOVE_PRODUCT,
   props<{ productName: string }>()
 );
 
