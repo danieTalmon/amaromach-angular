@@ -49,6 +49,6 @@ describe('Reducer: cart', () => {
       state,
       cartActions.checkout({ cart: state })
     );
-    expect(newState).toEqual({});
+    expect(newState).toEqual(initialState);
   });
 });

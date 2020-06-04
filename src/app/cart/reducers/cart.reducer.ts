@@ -32,7 +32,7 @@ export const cartReducer: ActionReducer<Cart, Action> = createReducer(
       return cartState;
     }
   }),
-  on(CartActions.checkout, (cartState, { cart }) => ({}))
+  on(CartActions.checkout, (cartState, { cart }) => (initialState))
 );
 
 export const getFeatureCart = createFeatureSelector<CartState>(cartStateToken);
