@@ -46,8 +46,8 @@ describe('Reducer: cart', () => {
 
   it('should reduce product limit', () => {
     const fakeCart: CartState = {
-      [productsMock[1].name]: productsMock[1].limit + 5,
-      [productsMock[3].name]: productsMock[1].limit + 10,
+      [productsMock[1].name]: productsMock[1].limit - 1,
+      [productsMock[3].name]: productsMock[3].limit - 10,
     };
     const newState: ProductListState = productListReducer(
       { productList: productsMock, selectedProduct: null },
