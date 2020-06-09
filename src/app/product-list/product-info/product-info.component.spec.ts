@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProductInfoComponent } from './product-info.component';
 
 describe('ProductInfoComponent', () => {
@@ -8,9 +7,8 @@ describe('ProductInfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProductInfoComponent ]
-    })
-    .compileComponents();
+      declarations: [ProductInfoComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

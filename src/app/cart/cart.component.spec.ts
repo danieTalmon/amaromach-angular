@@ -1,16 +1,20 @@
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { instance, mock } from 'ts-mockito';
+
 import { mockProduct } from './../product-list/mock/product-list.mock';
+import {
+  getProductList,
+  ProductListState,
+} from './../product-list/reducers/product-list.reducer';
 import { Cart } from './../shared/models/cart.model';
 import { Product } from './../shared/models/product.model';
-import { MatSelectModule } from '@angular/material/select';
+import { changeAmount, checkout, removeProduct } from './actions/cart.actions';
 import { CartProductComponent } from './cart-product/cart-product.component';
-import { ProductService } from './../services/product/product.service';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CartComponent } from './cart.component';
-import { mock, instance, when, verify } from 'ts-mockito';
-import { CartService } from '../services/cart/cart.service';
-import { MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
+import { CartState, getCart } from './reducers/cart.reducer';
 
 describe('CartComponent', () => {
   const amount: number = 3;
@@ -19,19 +23,17 @@ describe('CartComponent', () => {
 
   let cartComponent: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
-  const mockCartService: CartService = mock(CartService);
-  when(mockCartService.getCart$()).thenReturn(of(cart));
-  const mockProductService: ProductService = mock(ProductService);
-  when(mockProductService.getProducts$()).thenReturn(of(products));
   const mockMatDialog: MatDialogRef<CartComponent> = mock(MatDialogRef);
+  let mockStore: MockStore<CartState | ProductListState>;
+  let mockCartSelector;
+  let mockProductListSelector;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [CartComponent, CartProductComponent],
       imports: [MatSelectModule],
       providers: [
-        { provide: CartService, useValue: instance(mockCartService) },
-        { provide: ProductService, useValue: instance(mockProductService) },
+        provideMockStore(),
         { provide: MatDialogRef, useValue: instance(mockMatDialog) },
       ],
     }).compileComponents();
@@ -40,6 +42,13 @@ describe('CartComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CartComponent);
     cartComponent = fixture.componentInstance;
+    mockStore = TestBed.get(MockStore);
+    mockCartSelector = mockStore.overrideSelector(getCart, cart);
+    mockProductListSelector = mockStore.overrideSelector(
+      getProductList,
+      products
+    );
+    spyOn(mockStore, 'dispatch');
     fixture.detectChanges();
   });
 
@@ -58,14 +67,18 @@ describe('CartComponent', () => {
   it('should remove from cart', () => {
     cartComponent.removeFromCart(mockProduct.name);
 
-    verify(mockCartService.removeFromCart(mockProduct.name)).called();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(
+      removeProduct({ productName: mockProduct.name })
+    );
   });
 
   it('should change the amount of the cart product', () => {
     const newAmount: number = 3;
     cartComponent.changeAmount(mockProduct, newAmount);
 
-    verify(mockCartService.changeAmount(mockProduct, newAmount)).called();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(
+      changeAmount({ product: mockProduct, newAmount })
+    );
   });
 
   it('should get the cart total price', (done) => {
@@ -75,11 +88,9 @@ describe('CartComponent', () => {
     });
   });
 
-  it('should checkout', (done) => {
+  it('should checkout', () => {
     cartComponent.checkout();
 
-    verify(mockCartService.checkout()).called();
-    verify(mockProductService.updateProductsLimits(cart)).called();
-    done();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(checkout({ cart }));
   });
 });

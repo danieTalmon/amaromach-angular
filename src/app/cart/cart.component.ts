@@ -1,10 +1,16 @@
-import { ProductService } from 'src/app/services/product/product.service';
-import { CartService } from './../services/cart/cart.service';
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../shared/models/product.model';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { Product } from '../shared/models/product.model';
+import { reduceLimits } from './../product-list/actions/product-list.actions';
+import {
+  getProductList,
+  ProductListState,
+} from './../product-list/reducers/product-list.reducer';
+import { changeAmount, checkout, removeProduct } from './actions/cart.actions';
+import { getCart, CartState } from './reducers/cart.reducer';
 
 @Component({
   selector: 'ar-cart',
@@ -17,14 +23,13 @@ export class CartComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<CartComponent>,
-    private cartService: CartService,
-    private productService: ProductService
+    private store: Store<CartState | ProductListState>
   ) {}
 
   ngOnInit() {
     this.cartProducts$ = combineLatest([
-      this.productService.getProducts$(),
-      this.cartService.getCart$(),
+      this.store.select(getProductList),
+      this.store.select(getCart),
     ]).pipe(
       map(([products, cart]) =>
         Object.keys(cart).map((cartProductName) => ({
@@ -38,20 +43,19 @@ export class CartComponent implements OnInit {
   }
 
   removeFromCart(productName: string) {
-    this.cartService.removeFromCart(productName);
+    this.store.dispatch(removeProduct({ productName }));
   }
 
-  changeAmount(product: Product, productAmount: number) {
-    this.cartService.changeAmount(product, productAmount);
+  changeAmount(product: Product, newAmount: number) {
+    this.store.dispatch(changeAmount({ product, newAmount }));
   }
 
   checkout() {
-    this.cartService
-      .getCart$()
+    this.store
+      .select(getCart)
       .pipe(take(1))
       .subscribe((cart) => {
-        this.productService.updateProductsLimits(cart);
-        this.cartService.checkout();
+        this.store.dispatch(checkout({ cart }));
       });
   }
 

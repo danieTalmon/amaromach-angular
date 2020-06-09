@@ -1,11 +1,19 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Product } from '../../shared/models/product.model';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Product } from '../../shared/models/product.model';
 
 @Component({
   selector: 'ar-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductComponent implements OnInit {
   @Input()

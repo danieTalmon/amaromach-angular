@@ -1,11 +1,9 @@
-import { mockProduct } from '../mock/product-list.mock';
-import { Product } from './../../shared/models/product.model';
-import { ActivatedRoute } from '@angular/router';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ProductComponent } from './product.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { mock, instance } from 'ts-mockito';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
+import { instance, mock } from 'ts-mockito';
+import { mockProduct } from '../mock/product-list.mock';
+import { ProductComponent } from './product.component';
 
 describe('ProductComponent', () => {
   let productComponent: ProductComponent;
